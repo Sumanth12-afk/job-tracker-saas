@@ -1,0 +1,82 @@
+.container {
+    position: relative;
+}
+
+.exportBtn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: var(--space-2);
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-gray-100);
+    overflow: hidden;
+    z-index: 100;
+    min-width: 220px;
+    animation: slideDown 0.15s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-4);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.menuItem:hover {
+    background: var(--color-gray-50);
+}
+
+.menuItem:not(:last-child) {
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+.menuIcon {
+    font-size: var(--text-xl);
+}
+
+.menuItem div {
+    display: flex;
+    flex-direction: column;
+}
+
+.menuItem strong {
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+}
+
+.menuItem span {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+}

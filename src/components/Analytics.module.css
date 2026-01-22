@@ -1,0 +1,248 @@
+.container {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    border: 1px solid var(--color-gray-100);
+}
+
+.header {
+    margin-bottom: var(--space-6);
+}
+
+.title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-1) 0;
+}
+
+.subtitle {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    margin: 0;
+}
+
+/* Sections */
+.section {
+    margin-bottom: var(--space-6);
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+.sectionTitle {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-4) 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Funnel Chart */
+.funnel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.funnelStep {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.funnelBar {
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-4);
+    color: white;
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    transition: width 0.5s ease;
+    min-width: 0;
+}
+
+.funnelBar span {
+    white-space: nowrap;
+}
+
+.funnelRate {
+    font-size: var(--text-sm);
+    color: var(--text-tertiary);
+    white-space: nowrap;
+}
+
+/* Stats Grid */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.statCard {
+    background: var(--color-gray-50);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    text-align: center;
+}
+
+.statValue {
+    display: block;
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--color-primary-600);
+    margin-bottom: var(--space-1);
+}
+
+.statLabel {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+/* Insights Grid */
+.insightsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+}
+
+.insightCard {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--color-gray-50);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-gray-100);
+}
+
+.insightIcon {
+    font-size: 1.5rem;
+}
+
+.insightValue {
+    display: block;
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+}
+
+.insightValue.positive {
+    color: var(--color-success);
+}
+
+.insightValue.negative {
+    color: var(--color-error);
+}
+
+.insightLabel {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+/* Bar Chart */
+.barChart {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-end;
+    height: 120px;
+    padding-top: var(--space-4);
+}
+
+.barItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.barWrapper {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.bar {
+    width: 100%;
+    max-width: 48px;
+    background: linear-gradient(180deg, var(--color-primary-400) 0%, var(--color-primary-600) 100%);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: var(--space-1);
+    transition: height 0.5s ease;
+}
+
+.bar span {
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    color: white;
+}
+
+.barLabel {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    margin-top: var(--space-2);
+    white-space: nowrap;
+}
+
+/* Company List */
+.companyList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.companyItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-gray-50);
+    border-radius: var(--radius-md);
+}
+
+.companyRank {
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    color: var(--color-primary-500);
+    width: 28px;
+}
+
+.companyName {
+    flex: 1;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+    font-weight: var(--font-medium);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.companyCount {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    background: var(--bg-primary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .barChart {
+        height: 100px;
+    }
+}
