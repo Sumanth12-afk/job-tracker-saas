@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import styles from './JobCard.module.css';
 
-export default function JobCard({ job, onClick, onDragStart, onDragEnd, isDragging }) {
+export default function JobCard({ job, onClick, onDragStart, onDragEnd, isDragging, userEmail }) {
     // Check if follow-up is pending (applied > 7 days ago and not followed up)
     const isPendingFollowUp = () => {
         if (job.status !== 'Applied' || job.followed_up) return false;
@@ -76,23 +76,34 @@ export default function JobCard({ job, onClick, onDragStart, onDragEnd, isDraggi
         return templates[job.status] || templates.Applied;
     };
 
-    // Generate mailto link for follow-up email
+    // Generate Gmail Compose URL (opens Gmail in browser with user's account)
     const getFollowUpLink = () => {
-        const email = extractEmail(job.contact_email);
-        if (!email) return null;
+        const recipientEmail = extractEmail(job.contact_email);
+        if (!recipientEmail) return null;
 
         const template = getEmailTemplate();
         const subject = encodeURIComponent(template.subject);
         const body = encodeURIComponent(template.body);
 
-        return `mailto:${email}?subject=${subject}&body=${body}`;
+        // Use Gmail Compose URL with authuser to force the correct account
+        // Format: https://mail.google.com/mail/?authuser=user@gmail.com&view=cm&to=...
+        if (userEmail) {
+            return `https://mail.google.com/mail/?authuser=${encodeURIComponent(userEmail)}&view=cm&to=${encodeURIComponent(recipientEmail)}&su=${subject}&body=${body}`;
+        }
+        // Fallback to mailto if no user email
+        return `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
     };
 
     const handleFollowUp = (e) => {
         e.stopPropagation(); // Prevent card click
         const link = getFollowUpLink();
         if (link) {
-            window.location.href = link;
+            // Open in new tab for Gmail, same tab for mailto
+            if (link.startsWith('https://')) {
+                window.open(link, '_blank');
+            } else {
+                window.location.href = link;
+            }
         }
     };
 

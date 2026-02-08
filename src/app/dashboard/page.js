@@ -378,6 +378,7 @@ export default function DashboardPage() {
                         jobs={filteredJobs}
                         onJobClick={setSelectedJob}
                         onStatusChange={handleStatusChange}
+                        userEmail={user?.email}
                     />
                 </div>
             </main>

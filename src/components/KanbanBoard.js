@@ -16,7 +16,7 @@ const STATUS_COLUMNS = [
 const INITIAL_VISIBLE_COUNT = 10;
 const LOAD_MORE_COUNT = 10;
 
-export default function KanbanBoard({ jobs, onJobClick, onStatusChange }) {
+export default function KanbanBoard({ jobs, onJobClick, onStatusChange, userEmail }) {
     const [draggedJob, setDraggedJob] = useState(null);
     const [dragOverColumn, setDragOverColumn] = useState(null);
     const [visibleCounts, setVisibleCounts] = useState({
@@ -162,6 +162,7 @@ export default function KanbanBoard({ jobs, onJobClick, onStatusChange }) {
                                     onDragStart={(e) => handleDragStart(e, job)}
                                     onDragEnd={handleDragEnd}
                                     isDragging={draggedJob?.id === job.id}
+                                    userEmail={userEmail}
                                 />
                             ))}
 
@@ -231,6 +232,7 @@ export default function KanbanBoard({ jobs, onJobClick, onStatusChange }) {
                                         onDragStart={(e) => handleDragStart(e, job)}
                                         onDragEnd={handleDragEnd}
                                         isDragging={draggedJob?.id === job.id}
+                                        userEmail={userEmail}
                                     />
                                     {/* Reject button for ghosted jobs */}
                                     {job.attentionType === 'ghosted' && (
