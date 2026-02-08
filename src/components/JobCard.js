@@ -22,6 +22,44 @@ export default function JobCard({ job, onClick, onDragStart, onDragEnd, isDraggi
         return daysUntilInterview >= 0 && daysUntilInterview <= 7;
     };
 
+    // Extract email address from "Name <email>" format
+    const extractEmail = (contactEmail) => {
+        if (!contactEmail) return null;
+        const match = contactEmail.match(/<([^>]+)>/);
+        return match ? match[1] : contactEmail;
+    };
+
+    // Generate mailto link for follow-up email
+    const getFollowUpLink = () => {
+        const email = extractEmail(job.contact_email);
+        if (!email) return null;
+
+        const dateApplied = format(new Date(job.date_applied), 'MMMM d, yyyy');
+        const subject = encodeURIComponent(
+            `Following up on ${job.job_title} Application`
+        );
+        const body = encodeURIComponent(
+            `Hi,\n\n` +
+            `I hope this email finds you well. I wanted to follow up on my application for the ${job.job_title} position at ${job.company_name} that I submitted on ${dateApplied}.\n\n` +
+            `I am very excited about the opportunity to join your team and would love to discuss how my skills and experience align with your needs.\n\n` +
+            `Please let me know if there's any additional information I can provide.\n\n` +
+            `Thank you for your time and consideration.\n\n` +
+            `Best regards`
+        );
+
+        return `mailto:${email}?subject=${subject}&body=${body}`;
+    };
+
+    const handleFollowUp = (e) => {
+        e.stopPropagation(); // Prevent card click
+        const link = getFollowUpLink();
+        if (link) {
+            window.location.href = link;
+        }
+    };
+
+    const hasContactEmail = !!job.contact_email;
+
     return (
         <div
             className={`${styles.card} ${isDragging ? styles.dragging : ''}`}
@@ -36,17 +74,29 @@ export default function JobCard({ job, onClick, onDragStart, onDragEnd, isDraggi
                 <span className={styles.date}>
                     {format(new Date(job.date_applied), 'MMM d, yyyy')}
                 </span>
-                {isPendingFollowUp() && (
-                    <span className={styles.indicator} title="Follow-up needed">
-                        ⏰
-                    </span>
-                )}
-                {hasUpcomingInterview() && (
-                    <span className={styles.indicator} title="Interview soon">
-                        📅
-                    </span>
-                )}
+                <div className={styles.actions}>
+                    {hasContactEmail && (
+                        <button
+                            className={styles.followUpBtn}
+                            onClick={handleFollowUp}
+                            title="Send follow-up email"
+                        >
+                            📧
+                        </button>
+                    )}
+                    {isPendingFollowUp() && (
+                        <span className={styles.indicator} title="Follow-up needed">
+                            ⏰
+                        </span>
+                    )}
+                    {hasUpcomingInterview() && (
+                        <span className={styles.indicator} title="Interview soon">
+                            📅
+                        </span>
+                    )}
+                </div>
             </div>
         </div>
     );
 }
+

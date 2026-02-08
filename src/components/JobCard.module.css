@@ -53,3 +53,26 @@
 .indicator {
     font-size: var(--text-sm);
 }
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.followUpBtn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    font-size: var(--text-sm);
+    opacity: 0.6;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-sm);
+}
+
+.followUpBtn:hover {
+    opacity: 1;
+    background: var(--color-gray-100);
+    transform: scale(1.1);
+}

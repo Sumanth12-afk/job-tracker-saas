@@ -907,6 +907,7 @@ export async function GET(request) {
                         date_applied: dateApplied,
                         status: finalStatus,
                         source: 'gmail',
+                        contact_email: from, // Store sender email for follow-up
                         confidence: confidence,
                         extraction_confidence: extraction.confidence,
                         extraction_source: extraction.source,
