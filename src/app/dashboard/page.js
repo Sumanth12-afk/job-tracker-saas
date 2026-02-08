@@ -155,6 +155,7 @@ export default function DashboardPage() {
                         source: 'gmail',
                         user_id: user.id,
                         gmail_message_id: job.gmail_message_id || job.id, // Store message ID for duplicate detection
+                        contact_email: job.contact_email, // Store email for follow-up feature
                     }])
                     .select()
                     .single();
