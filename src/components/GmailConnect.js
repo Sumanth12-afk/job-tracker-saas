@@ -8,6 +8,7 @@ export default function GmailConnect({ onJobsFound, isConnected, setIsConnected,
     const [foundJobs, setFoundJobs] = useState([]);
     const [error, setError] = useState('');
     const [timeRange, setTimeRange] = useState('30'); // days
+    const [scanStats, setScanStats] = useState(null); // Track scan statistics
 
     const handleConnect = async () => {
         try {
@@ -33,6 +34,14 @@ export default function GmailConnect({ onJobsFound, isConnected, setIsConnected,
             }
 
             setFoundJobs(data.jobs || []);
+
+            // Store scan statistics for display
+            setScanStats({
+                scanned: data.scanned || 0,
+                found: data.jobs?.length || 0,
+                alreadyImported: data.alreadyImported || 0,
+                timeRange: data.timeRange || `${timeRange} days`
+            });
 
             console.log('Gmail scan result:', { jobs: data.jobs?.length, scanned: data.scanned, alreadyImported: data.alreadyImported, existingJobsCount: data.existingJobsCount });
 
@@ -156,6 +165,24 @@ export default function GmailConnect({ onJobsFound, isConnected, setIsConnected,
                             )}
                         </button>
                     </div>
+
+                    {/* Scan Statistics Display */}
+                    {scanStats && (
+                        <div className={styles.scanStats}>
+                            <div className={styles.statItem}>
+                                <span className={styles.statNumber}>{scanStats.scanned}</span>
+                                <span className={styles.statLabel}>Emails Scanned</span>
+                            </div>
+                            <div className={styles.statItem}>
+                                <span className={styles.statNumber}>{scanStats.found}</span>
+                                <span className={styles.statLabel}>Jobs Found</span>
+                            </div>
+                            <div className={styles.statItem}>
+                                <span className={styles.statNumber}>{scanStats.alreadyImported}</span>
+                                <span className={styles.statLabel}>Already Imported</span>
+                            </div>
+                        </div>
+                    )}
 
                     {foundJobs.length > 0 && (
                         <div className={styles.foundJobs}>

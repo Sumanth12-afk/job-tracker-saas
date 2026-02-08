@@ -824,7 +824,7 @@ export async function GET(request) {
         const seenEmails = new Set();
         let skippedDuplicates = 0;
 
-        for (const messageId of messageIds.slice(0, 100)) {
+        for (const messageId of messageIds.slice(0, 1000)) {
             // Skip if already imported by gmail_message_id
             if (existingGmailIds.has(messageId)) {
                 skippedDuplicates++;
