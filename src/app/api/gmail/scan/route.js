@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { hybridClassify, classifyEmail } from '@/lib/emailClassifier';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -860,11 +861,26 @@ export async function GET(request) {
                 if (seenEmails.has(emailKey)) continue;
                 seenEmails.add(emailKey);
 
-                // Score the email
-                const { score, status, confidence } = scoreEmail(from, subject);
+                // Score the email using rules
+                const ruleResult = scoreEmail(from, subject);
+                const { score, status, confidence } = ruleResult;
 
-                // Include if score >= 2 (catches more results)
-                if (score >= 2) {
+                // Use hybrid ML + rules classification
+                const mlDecision = hybridClassify(
+                    { from, subject, snippet, body: bodyText },
+                    { score, status, confidence }
+                );
+
+                // Skip if both systems agree it's not a job email
+                if (!mlDecision.isJobEmail && score < 2) {
+                    if (score > 0) {
+                        console.log(`[SKIP] ML rejected (${mlDecision.mlCategory}, ${(mlDecision.mlConfidence * 100).toFixed(1)}%): ${subject.substring(0, 40)}...`);
+                    }
+                    continue;
+                }
+
+                // Include if ML or rules say it's a job (ML threshold met OR score >= 2)
+                if (mlDecision.isJobEmail || score >= 2) {
                     const companyName = extractCompanyName(from, subject);
                     const dateApplied = new Date(date).toISOString().split('T')[0];
 
@@ -880,21 +896,28 @@ export async function GET(request) {
                     const jobTitle = extraction.title;
                     console.log(`[JOB] ${companyName}: "${jobTitle}" (confidence: ${extraction.confidence}, source: ${extraction.source})`);
 
+                    // Use ML-suggested status if available and confident
+                    const finalStatus = mlDecision.status || status;
+
                     jobs.push({
                         id: messageId,
                         gmail_message_id: messageId, // Store for duplicate detection
                         company_name: companyName,
                         job_title: jobTitle,
                         date_applied: dateApplied,
-                        status: status,
+                        status: finalStatus,
                         source: 'gmail',
                         confidence: confidence,
                         extraction_confidence: extraction.confidence,
                         extraction_source: extraction.source,
                         score: score,
+                        // ML classification data
+                        ml_category: mlDecision.mlCategory,
+                        ml_confidence: mlDecision.mlConfidence,
+                        ml_source: mlDecision.source,
                     });
                 } else if (score > 0) {
-                    console.log(`Skipped (score ${score}): ${subject.substring(0, 50)}...`);
+                    console.log(`[SKIP] Low score (${score}): ${subject.substring(0, 50)}...`);
                 }
             } catch (err) {
                 continue;
