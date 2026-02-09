@@ -123,6 +123,60 @@ async function getAccessToken(cookieStore) {
 }
 
 // ============================================
+// INPUT VALIDATION & SANITIZATION
+// ============================================
+const INPUT_LIMITS = {
+    SUBJECT_MAX_LENGTH: 500,
+    BODY_MAX_LENGTH: 10000,
+    COMPANY_MAX_LENGTH: 100,
+    JOB_TITLE_MAX_LENGTH: 150,
+    EMAIL_MAX_LENGTH: 254,
+};
+
+// Model versioning for tracking predictions
+const ML_MODEL_VERSION = 'v1.0.0';
+
+// Observability tracking
+const scanMetrics = {
+    totalScans: 0,
+    ruleClassified: 0,
+    mlClassified: 0,
+    fallbackUsed: 0,
+    avgConfidence: [],
+};
+
+// Sanitize and validate input strings
+function sanitizeInput(str, maxLength, fieldName = 'input') {
+    if (!str) return '';
+
+    // Convert to string if not already
+    let sanitized = String(str);
+
+    // Trim whitespace
+    sanitized = sanitized.trim();
+
+    // Cap length
+    if (sanitized.length > maxLength) {
+        console.log(`[INPUT VALIDATION] ${fieldName} truncated from ${sanitized.length} to ${maxLength} chars`);
+        sanitized = sanitized.slice(0, maxLength);
+    }
+
+    // Remove null bytes and control characters (except newlines/tabs)
+    sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+
+    return sanitized;
+}
+
+// Normalize for matching (lowercase, single spaces, alphanumeric only)
+function normalizeForMatch(str) {
+    return (str || '')
+        .toLowerCase()
+        .replace(/\s+/g, ' ')
+        .replace(/[^a-z0-9 ]/g, '')
+        .trim();
+}
+
+// ============================================
 // JOB EVENT DETECTOR - Smart Scoring System
 // ============================================
 
@@ -329,25 +383,32 @@ const EXCLUDE_DOMAINS = [
 ];
 
 // ============================================
-// SCORING FUNCTION
+// SCORING FUNCTION (with Explainability)
 // ============================================
 function scoreEmail(from, subject) {
-    const fromLower = from.toLowerCase();
-    const subjectLower = subject.toLowerCase();
+    // Sanitize inputs
+    const fromSanitized = sanitizeInput(from, INPUT_LIMITS.EMAIL_MAX_LENGTH, 'from');
+    const subjectSanitized = sanitizeInput(subject, INPUT_LIMITS.SUBJECT_MAX_LENGTH, 'subject');
+
+    const fromLower = fromSanitized.toLowerCase();
+    const subjectLower = subjectSanitized.toLowerCase();
 
     let score = 0;
     let status = 'Applied';
     let confidence = 'low';
+    const signals = []; // Track what triggered the classification
 
     // Check exclusions first
     for (const exclude of EXCLUDE_KEYWORDS) {
         if (subjectLower.includes(exclude.toLowerCase())) {
-            return { score: -10, status, confidence: 'excluded' };
+            signals.push(`excluded:${exclude}`);
+            return { score: -10, status, confidence: 'excluded', signals, modelVersion: ML_MODEL_VERSION };
         }
     }
     for (const domain of EXCLUDE_DOMAINS) {
         if (fromLower.includes(domain)) {
-            return { score: -10, status, confidence: 'excluded' };
+            signals.push(`excluded_domain:${domain}`);
+            return { score: -10, status, confidence: 'excluded', signals, modelVersion: ML_MODEL_VERSION };
         }
     }
 
@@ -356,6 +417,7 @@ function scoreEmail(from, subject) {
         if (fromLower.includes(ats)) {
             score += 3;
             confidence = 'high';
+            signals.push(`ats:${ats}`);
             break;
         }
     }
@@ -364,6 +426,7 @@ function scoreEmail(from, subject) {
     for (const board of JOB_BOARDS) {
         if (fromLower.includes(board)) {
             score += 1;
+            signals.push(`job_board:${board}`);
             break;
         }
     }
@@ -373,6 +436,7 @@ function scoreEmail(from, subject) {
         if (subjectLower.includes(keyword.toLowerCase())) {
             score += 2;
             confidence = 'high';
+            signals.push(`confirm:${keyword}`);
             break;
         }
     }
@@ -383,6 +447,7 @@ function scoreEmail(from, subject) {
             score += 2;
             status = 'Interview';
             confidence = 'high';
+            signals.push(`interview:${keyword}`);
             break;
         }
     }
@@ -393,6 +458,7 @@ function scoreEmail(from, subject) {
             score += 2;
             status = 'Offer';
             confidence = 'high';
+            signals.push(`offer:${keyword}`);
             break;
         }
     }
@@ -402,6 +468,7 @@ function scoreEmail(from, subject) {
         if (subjectLower.includes(keyword.toLowerCase())) {
             score += 1;
             status = 'Rejected';
+            signals.push(`rejection:${keyword}`);
             break;
         }
     }
@@ -410,11 +477,12 @@ function scoreEmail(from, subject) {
     for (const keyword of STATUS_KEYWORDS) {
         if (subjectLower.includes(keyword.toLowerCase())) {
             score += 1;
+            signals.push(`status:${keyword}`);
             break;
         }
     }
 
-    return { score, status, confidence };
+    return { score, status, confidence, signals, modelVersion: ML_MODEL_VERSION };
 }
 
 // ============================================
@@ -818,6 +886,13 @@ export async function GET(request) {
         }
         console.log('Gmail scan - userId:', userId ? userId.substring(0, 8) + '...' : 'null');
 
+        // Reset metrics for this scan
+        scanMetrics.totalScans++;
+        scanMetrics.ruleClassified = 0;
+        scanMetrics.mlClassified = 0;
+        scanMetrics.fallbackUsed = 0;
+        scanMetrics.avgConfidence = [];
+
         // Rate limiting check (5 scans per minute per user)
         if (userId) {
             const rateCheck = checkRateLimit(userId, 'gmail-scan');
@@ -988,11 +1063,23 @@ export async function GET(request) {
                     // Use ML-suggested status if available and confident
                     const finalStatus = mlDecision.status || status;
 
+                    // Track classification source for drift monitoring
+                    if (mlDecision.source === 'ml') {
+                        scanMetrics.mlClassified++;
+                    } else if (mlDecision.source === 'rules') {
+                        scanMetrics.ruleClassified++;
+                    } else {
+                        scanMetrics.fallbackUsed++;
+                    }
+                    if (mlDecision.mlConfidence) {
+                        scanMetrics.avgConfidence.push(mlDecision.mlConfidence);
+                    }
+
                     jobs.push({
                         id: messageId,
                         gmail_message_id: messageId, // Store for duplicate detection
-                        company_name: companyName,
-                        job_title: jobTitle,
+                        company_name: sanitizeInput(companyName, INPUT_LIMITS.COMPANY_MAX_LENGTH, 'company'),
+                        job_title: sanitizeInput(jobTitle, INPUT_LIMITS.JOB_TITLE_MAX_LENGTH, 'job_title'),
                         date_applied: dateApplied,
                         status: finalStatus,
                         source: 'gmail',
@@ -1005,6 +1092,9 @@ export async function GET(request) {
                         ml_category: mlDecision.mlCategory,
                         ml_confidence: mlDecision.mlConfidence,
                         ml_source: mlDecision.source,
+                        // Explainability data
+                        signals: ruleResult.signals || [],
+                        model_version: ML_MODEL_VERSION,
                     });
                 } else if (score > 0) {
                     console.log(`[SKIP] Low score (${score}): ${subject.substring(0, 50)}...`);
@@ -1017,6 +1107,15 @@ export async function GET(request) {
         // Sort by date (newest first)
         jobs.sort((a, b) => new Date(b.date_applied) - new Date(a.date_applied));
 
+        // Calculate drift metrics
+        const totalClassified = scanMetrics.mlClassified + scanMetrics.ruleClassified + scanMetrics.fallbackUsed;
+        const avgConf = scanMetrics.avgConfidence.length > 0
+            ? (scanMetrics.avgConfidence.reduce((a, b) => a + b, 0) / scanMetrics.avgConfidence.length).toFixed(3)
+            : null;
+
+        // Log observability data
+        console.log(`[OBSERVABILITY] Scan complete - Total: ${jobs.length}, Rules: ${scanMetrics.ruleClassified}, ML: ${scanMetrics.mlClassified}, Fallback: ${scanMetrics.fallbackUsed}, Avg ML Confidence: ${avgConf || 'N/A'}`);
+
         return NextResponse.json({
             jobs,
             connected: true,
@@ -1025,6 +1124,17 @@ export async function GET(request) {
             totalFound: jobs.length,
             alreadyImported: skippedDuplicates,
             existingJobsCount: existingJobKeys.size, // Total jobs already tracked
+            // Observability metrics (for monitoring dashboard)
+            metrics: {
+                modelVersion: ML_MODEL_VERSION,
+                ruleClassified: scanMetrics.ruleClassified,
+                mlClassified: scanMetrics.mlClassified,
+                fallbackUsed: scanMetrics.fallbackUsed,
+                avgMlConfidence: avgConf,
+                rulesVsMlRatio: totalClassified > 0
+                    ? (scanMetrics.ruleClassified / totalClassified).toFixed(2)
+                    : null,
+            }
         });
     } catch (err) {
         console.error('Gmail scan error:', err);
