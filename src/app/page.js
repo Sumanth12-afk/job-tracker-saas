@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from './page.module.css';
 import dynamic from 'next/dynamic';
 
@@ -47,15 +47,75 @@ const hyperspeedOptions = {
   }
 };
 
+// FAQ Data
+const faqData = [
+  {
+    question: "Is JobTracker really free?",
+    answer: "Yes! JobTracker is completely free to use. We believe everyone deserves access to great job search tools. We may introduce premium features in the future, but the core functionality will always be free."
+  },
+  {
+    question: "How does Gmail auto-import work?",
+    answer: "After you connect your Gmail account (read-only access), we scan for job application confirmation emails from platforms like LinkedIn, Indeed, Greenhouse, and more. We extract the company name, job title, and date automatically."
+  },
+  {
+    question: "Is my data safe and private?",
+    answer: "Absolutely. We only read job-related emails and never store the email content itself. Your data is encrypted, and we never sell or share your information with third parties. You can delete your data anytime."
+  },
+  {
+    question: "Can I use JobTracker without connecting Gmail?",
+    answer: "Yes! Gmail integration is optional. You can manually add job applications using the '+ Add Job' button. Gmail just makes it faster to import applications you've already submitted."
+  },
+  {
+    question: "What job platforms are supported?",
+    answer: "We detect emails from LinkedIn, Indeed, Greenhouse, Lever, Workday, iCIMS, and 50+ other ATS platforms. If you apply through email or company websites, we'll likely detect those too."
+  },
+  {
+    question: "How do follow-up reminders work?",
+    answer: "When an application has been in 'Applied' status for 7+ days without activity, it moves to 'Needs Attention'. Jobs over 30 days are marked as 'Ghosted'. You can also use our one-click follow-up email feature."
+  }
+];
+
 export default function Home() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [openFaq, setOpenFaq] = useState(null);
+  const [visibleSections, setVisibleSections] = useState({});
+  const sectionRefs = useRef({});
 
+  // Redirect if logged in
   useEffect(() => {
     if (!loading && user) {
       router.push('/dashboard');
     }
   }, [user, loading, router]);
+
+  // Scroll reveal observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => ({
+              ...prev,
+              [entry.target.id]: true
+            }));
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    // Observe all sections
+    Object.values(sectionRefs.current).forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, [loading]);
+
+  const toggleFaq = (index) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
   if (loading) {
     return (
@@ -234,30 +294,62 @@ export default function Home() {
         </section>
 
         {/* Optimize Your Job Search */}
-        <section className={styles.optimizeSection}>
+        <section
+          id="optimize"
+          ref={(el) => (sectionRefs.current.optimize = el)}
+          className={`${styles.optimizeSection} ${styles.sectionReveal} ${visibleSections.optimize ? styles.sectionRevealVisible : ''}`}
+        >
           <h2 className={styles.sectionHead}>Optimize Your Job Search</h2>
           <p className={styles.optimizeSubtitle}>Turn chaos into a systematic approach that gets results</p>
           <div className={styles.optimizeGrid}>
-            <div className={styles.optimizeCard}>
+            <div className={`${styles.optimizeCard} ${styles.scrollReveal} ${visibleSections.optimize ? styles.scrollRevealVisible : ''}`}>
               <span className={styles.optimizeIcon}>🎯</span>
               <h4>Track Everything</h4>
               <p>Never lose track of where you applied. See your entire pipeline at a glance.</p>
             </div>
-            <div className={styles.optimizeCard}>
+            <div className={`${styles.optimizeCard} ${styles.scrollReveal} ${visibleSections.optimize ? styles.scrollRevealVisible : ''}`}>
               <span className={styles.optimizeIcon}>⏰</span>
               <h4>Follow Up on Time</h4>
               <p>Get reminders when applications go stale. The right follow-up can change everything.</p>
             </div>
-            <div className={styles.optimizeCard}>
+            <div className={`${styles.optimizeCard} ${styles.scrollReveal} ${visibleSections.optimize ? styles.scrollRevealVisible : ''}`}>
               <span className={styles.optimizeIcon}>📊</span>
               <h4>Learn from Data</h4>
               <p>See your response rates, best days to apply, and identify what's working.</p>
             </div>
-            <div className={styles.optimizeCard}>
+            <div className={`${styles.optimizeCard} ${styles.scrollReveal} ${visibleSections.optimize ? styles.scrollRevealVisible : ''}`}>
               <span className={styles.optimizeIcon}>🚀</span>
               <h4>Stay Motivated</h4>
               <p>Application streaks, progress badges, and clear wins keep you going.</p>
             </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section
+          id="faq"
+          ref={(el) => (sectionRefs.current.faq = el)}
+          className={`${styles.faqSection} ${styles.sectionReveal} ${visibleSections.faq ? styles.sectionRevealVisible : ''}`}
+        >
+          <h2 className={styles.sectionHead}>Frequently Asked Questions</h2>
+          <div className={styles.faqGrid}>
+            {faqData.map((faq, index) => (
+              <div
+                key={index}
+                className={`${styles.faqItem} ${styles.scrollReveal} ${visibleSections.faq ? styles.scrollRevealVisible : ''}`}
+              >
+                <button
+                  className={styles.faqQuestion}
+                  onClick={() => toggleFaq(index)}
+                >
+                  <span>{faq.question}</span>
+                  <span className={`${styles.faqIcon} ${openFaq === index ? styles.faqIconOpen : ''}`}>+</span>
+                </button>
+                <div className={`${styles.faqAnswer} ${openFaq === index ? styles.faqAnswerOpen : ''}`}>
+                  <p>{faq.answer}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
