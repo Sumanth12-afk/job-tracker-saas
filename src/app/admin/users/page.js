@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 import styles from '../admin.module.css';
 
 export default function AdminUsersPage() {
@@ -10,15 +11,26 @@ export default function AdminUsersPage() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
     const [detailsLoading, setDetailsLoading] = useState(false);
+    const [userEmail, setUserEmail] = useState(null);
 
     useEffect(() => {
-        fetchUsers(1);
+        initAndFetch();
     }, []);
 
-    const fetchUsers = async (page) => {
+    const initAndFetch = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) {
+            setUserEmail(session.user.email);
+            await fetchUsers(1, session.user.email);
+        }
+    };
+
+    const fetchUsers = async (page, email = userEmail) => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/admin/users?page=${page}&limit=20`);
+            const res = await fetch(`/api/admin/users?page=${page}&limit=20`, {
+                headers: { 'x-admin-email': email }
+            });
             const data = await res.json();
             setUsers(data.users || []);
             setPagination(data.pagination || { page: 1, totalPages: 1, total: 0 });
@@ -32,7 +44,9 @@ export default function AdminUsersPage() {
     const fetchUserDetails = async (userId) => {
         setDetailsLoading(true);
         try {
-            const res = await fetch(`/api/admin/users/${userId}`);
+            const res = await fetch(`/api/admin/users/${userId}`, {
+                headers: { 'x-admin-email': userEmail }
+            });
             const data = await res.json();
             setUserDetails(data);
         } catch (err) {
@@ -53,7 +67,10 @@ export default function AdminUsersPage() {
         }
 
         try {
-            const res = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
+            const res = await fetch(`/api/admin/users/${userId}`, {
+                method: 'DELETE',
+                headers: { 'x-admin-email': userEmail }
+            });
             if (res.ok) {
                 fetchUsers(pagination.page);
                 setSelectedUser(null);
@@ -141,7 +158,6 @@ export default function AdminUsersPage() {
                         </tbody>
                     </table>
 
-                    {/* Pagination */}
                     {pagination.totalPages > 1 && (
                         <div className={styles.pagination}>
                             <button
@@ -190,7 +206,6 @@ export default function AdminUsersPage() {
                                     <strong>User ID:</strong> {userDetails.user_id}
                                 </p>
 
-                                {/* Stats */}
                                 <div className={styles.statsGrid} style={{ marginBottom: '1.5rem' }}>
                                     <div className={styles.statCard}>
                                         <p className={styles.statValue}>{userDetails.stats?.totalJobs || 0}</p>
@@ -206,7 +221,6 @@ export default function AdminUsersPage() {
                                     </div>
                                 </div>
 
-                                {/* Status Breakdown */}
                                 <div style={{ marginBottom: '1.5rem' }}>
                                     <h4 style={{ color: '#f1f5f9', marginBottom: '0.5rem' }}>Status Breakdown</h4>
                                     <div className={styles.statusGrid}>
@@ -219,24 +233,17 @@ export default function AdminUsersPage() {
                                     </div>
                                 </div>
 
-                                {/* Gmail Status */}
                                 <div style={{ marginBottom: '1.5rem' }}>
                                     <h4 style={{ color: '#f1f5f9', marginBottom: '0.5rem' }}>Gmail Connection</h4>
                                     {userDetails.gmail?.connected ? (
                                         <p style={{ color: userDetails.gmail.expired ? '#ef4444' : '#22c55e' }}>
                                             {userDetails.gmail.expired ? '❌ Token Expired' : '✅ Connected'}
-                                            {userDetails.gmail.expiresAt && (
-                                                <span style={{ color: '#64748b', marginLeft: '0.5rem' }}>
-                                                    (Expires: {formatDateTime(userDetails.gmail.expiresAt)})
-                                                </span>
-                                            )}
                                         </p>
                                     ) : (
                                         <p style={{ color: '#64748b' }}>Not connected</p>
                                     )}
                                 </div>
 
-                                {/* Activity Dates */}
                                 <div>
                                     <p style={{ color: '#64748b' }}>
                                         <strong>First Activity:</strong> {formatDateTime(userDetails.stats?.firstActivity)}

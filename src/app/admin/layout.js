@@ -3,28 +3,55 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 import styles from './admin.module.css';
+
+// Admin emails - must match server-side
+const ADMIN_EMAILS = [
+    'krushi.krishh@gmail.com',
+    'nallandhigalsumanth@gmail.com'
+];
 
 export default function AdminLayout({ children }) {
     const [isAuthorized, setIsAuthorized] = useState(null);
+    const [userEmail, setUserEmail] = useState(null);
     const router = useRouter();
 
     useEffect(() => {
-        // Check if user is admin
-        fetch('/api/admin/stats')
-            .then(res => {
-                if (res.status === 403) {
-                    setIsAuthorized(false);
-                    router.push('/dashboard');
-                } else {
-                    setIsAuthorized(true);
-                }
-            })
-            .catch(() => {
+        checkAdminAccess();
+    }, []);
+
+    const checkAdminAccess = async () => {
+        try {
+            // Get user from Supabase client-side auth
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session?.user?.email) {
+                console.log('[ADMIN] No session found');
+                setIsAuthorized(false);
+                router.push('/login');
+                return;
+            }
+
+            const email = session.user.email;
+            setUserEmail(email);
+            console.log('[ADMIN] User email:', email);
+
+            // Check if user is admin
+            if (ADMIN_EMAILS.includes(email)) {
+                console.log('[ADMIN] Access granted');
+                setIsAuthorized(true);
+            } else {
+                console.log('[ADMIN] Not an admin, redirecting');
                 setIsAuthorized(false);
                 router.push('/dashboard');
-            });
-    }, [router]);
+            }
+        } catch (error) {
+            console.error('[ADMIN] Auth error:', error);
+            setIsAuthorized(false);
+            router.push('/dashboard');
+        }
+    };
 
     if (isAuthorized === null) {
         return (
@@ -44,6 +71,9 @@ export default function AdminLayout({ children }) {
             <aside className={styles.sidebar}>
                 <div className={styles.sidebarHeader}>
                     <h1>🛠️ Admin</h1>
+                    <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0.5rem 0 0 0' }}>
+                        {userEmail?.split('@')[0]}
+                    </p>
                 </div>
                 <nav className={styles.sidebarNav}>
                     <Link href="/admin" className={styles.navLink}>

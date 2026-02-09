@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-    PieChart, Pie, Cell, BarChart, Bar, Legend
+    PieChart, Pie, Cell, Legend
 } from 'recharts';
 import styles from './admin.module.css';
 
@@ -13,14 +14,31 @@ export default function AdminDashboard() {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userEmail, setUserEmail] = useState(null);
 
     useEffect(() => {
-        fetchStats();
+        initAndFetch();
     }, []);
 
-    const fetchStats = async () => {
+    const initAndFetch = async () => {
+        // Get user email first
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) {
+            setUserEmail(session.user.email);
+            await fetchStats(session.user.email);
+        } else {
+            setError('Not authenticated');
+            setLoading(false);
+        }
+    };
+
+    const fetchStats = async (email) => {
         try {
-            const res = await fetch('/api/admin/stats');
+            const res = await fetch('/api/admin/stats', {
+                headers: {
+                    'x-admin-email': email
+                }
+            });
             if (!res.ok) throw new Error('Failed to fetch stats');
             const data = await res.json();
             setStats(data);

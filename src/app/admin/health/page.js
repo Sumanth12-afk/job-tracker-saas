@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 import styles from '../admin.module.css';
 
 export default function SystemHealthPage() {
@@ -8,12 +9,21 @@ export default function SystemHealthPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchHealth();
+        initAndFetch();
     }, []);
 
-    const fetchHealth = async () => {
+    const initAndFetch = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) {
+            await fetchHealth(session.user.email);
+        }
+    };
+
+    const fetchHealth = async (email) => {
         try {
-            const res = await fetch('/api/admin/stats');
+            const res = await fetch('/api/admin/stats', {
+                headers: { 'x-admin-email': email }
+            });
             const data = await res.json();
             setStats(data);
         } catch (err) {
@@ -42,7 +52,6 @@ export default function SystemHealthPage() {
                 <p>Monitor the health of your platform</p>
             </div>
 
-            {/* Health Stats */}
             <div className={styles.statsGrid}>
                 <div className={styles.statCard}>
                     <div className={styles.statIcon}>🔐</div>
@@ -74,7 +83,6 @@ export default function SystemHealthPage() {
                 </div>
             </div>
 
-            {/* System Info */}
             <div className={styles.chartCard} style={{ marginTop: '1.5rem' }}>
                 <h3>📋 System Information</h3>
                 <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
@@ -97,7 +105,6 @@ export default function SystemHealthPage() {
                 </div>
             </div>
 
-            {/* Health Indicators */}
             <div className={styles.chartCard} style={{ marginTop: '1.5rem' }}>
                 <h3>🚦 Health Indicators</h3>
                 <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
@@ -113,10 +120,6 @@ export default function SystemHealthPage() {
                     />
                 </div>
             </div>
-
-            <p style={{ color: '#64748b', fontSize: '0.75rem', textAlign: 'center', marginTop: '2rem' }}>
-                Last updated: {stats?.timestamp ? new Date(stats.timestamp).toLocaleString() : 'N/A'}
-            </p>
         </div>
     );
 }

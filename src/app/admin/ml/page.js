@@ -1,25 +1,32 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 import {
-    PieChart, Pie, Cell, ResponsiveContainer,
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend
+    PieChart, Pie, Cell, ResponsiveContainer, Tooltip
 } from 'recharts';
 import styles from '../admin.module.css';
-
-const COLORS = ['#6366f1', '#22c55e', '#f59e0b'];
 
 export default function MLMonitoringPage() {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchStats();
+        initAndFetch();
     }, []);
 
-    const fetchStats = async () => {
+    const initAndFetch = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) {
+            await fetchStats(session.user.email);
+        }
+    };
+
+    const fetchStats = async (email) => {
         try {
-            const res = await fetch('/api/admin/stats');
+            const res = await fetch('/api/admin/stats', {
+                headers: { 'x-admin-email': email }
+            });
             const data = await res.json();
             setStats(data);
         } catch (err) {
@@ -59,7 +66,6 @@ export default function MLMonitoringPage() {
                 <p>Monitor ML classification performance and drift</p>
             </div>
 
-            {/* ML Stats Cards */}
             <div className={styles.statsGrid}>
                 <div className={styles.statCard}>
                     <div className={styles.statIcon}>🎯</div>
@@ -71,7 +77,7 @@ export default function MLMonitoringPage() {
                     <p className={styles.statValue} style={{ color: '#22c55e' }}>
                         {mlStats.ruleClassified || 0}
                     </p>
-                    <p className={styles.statLabel}>Rule-Based Classifications</p>
+                    <p className={styles.statLabel}>Rule-Based</p>
                 </div>
                 <div className={styles.statCard}>
                     <div className={styles.statIcon}>🧠</div>
@@ -87,11 +93,9 @@ export default function MLMonitoringPage() {
                 </div>
             </div>
 
-            {/* Charts */}
             <div className={styles.chartsSection}>
-                {/* Classification Distribution */}
                 <div className={styles.chartCard}>
-                    <h3>📊 Classification Source Distribution</h3>
+                    <h3>📊 Classification Distribution</h3>
                     {totalClassified > 0 ? (
                         <ResponsiveContainer width="100%" height={250}>
                             <PieChart>
@@ -101,7 +105,6 @@ export default function MLMonitoringPage() {
                                     cy="50%"
                                     innerRadius={60}
                                     outerRadius={80}
-                                    fill="#8884d8"
                                     paddingAngle={5}
                                     dataKey="value"
                                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
@@ -121,7 +124,6 @@ export default function MLMonitoringPage() {
                     )}
                 </div>
 
-                {/* Drift Indicator */}
                 <div className={styles.chartCard}>
                     <h3>📈 Rules vs ML Ratio</h3>
                     <div style={{ padding: '2rem', textAlign: 'center' }}>
@@ -171,7 +173,6 @@ export default function MLMonitoringPage() {
                 </div>
             </div>
 
-            {/* Model Info */}
             <div className={styles.chartCard} style={{ marginTop: '1.5rem' }}>
                 <h3>🏷️ Model Information</h3>
                 <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
@@ -187,14 +188,9 @@ export default function MLMonitoringPage() {
                         <span style={{ color: '#64748b' }}>ML Confidence Threshold</span>
                         <span style={{ color: '#f1f5f9' }}>60%</span>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem', background: '#0f172a', borderRadius: '8px' }}>
-                        <span style={{ color: '#64748b' }}>Base Model</span>
-                        <span style={{ color: '#f1f5f9' }}>DistilBERT (fine-tuned)</span>
-                    </div>
                 </div>
             </div>
 
-            {/* Health Status */}
             <div className={styles.chartCard} style={{ marginTop: '1.5rem' }}>
                 <h3>🚦 ML Health Status</h3>
                 <div style={{
@@ -219,10 +215,10 @@ export default function MLMonitoringPage() {
                         </p>
                         <p style={{ color: '#64748b', margin: '0.25rem 0 0 0', fontSize: '0.875rem' }}>
                             {rulesPercent > 70
-                                ? 'Most emails are being classified by efficient rules. ML is used for edge cases.'
+                                ? 'Most emails are being classified by efficient rules.'
                                 : rulesPercent > 30
-                                    ? 'Good balance between rules and ML. Consider adding more rules for common patterns.'
-                                    : 'ML is handling most classifications. This may indicate new email patterns.'}
+                                    ? 'Good balance between rules and ML.'
+                                    : 'ML is handling most classifications.'}
                         </p>
                     </div>
                 </div>

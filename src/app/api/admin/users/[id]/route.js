@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -10,31 +9,14 @@ const ADMIN_EMAILS = [
     'nallandhigalsumanth@gmail.com'
 ];
 
-async function isAdmin(cookieStore) {
-    try {
-        const projectRef = supabaseUrl.match(/https:\/\/(.+)\.supabase\.co/)?.[1];
-        const authCookie = cookieStore.get(`sb-${projectRef}-auth-token`);
-        if (!authCookie) return false;
-
-        let authData;
-        try {
-            const cookieValue = decodeURIComponent(authCookie.value);
-            authData = JSON.parse(cookieValue);
-        } catch (e) {
-            authData = JSON.parse(authCookie.value);
-        }
-
-        const userEmail = authData?.user?.email || authData?.email;
-        return ADMIN_EMAILS.includes(userEmail);
-    } catch (e) {
-        return false;
-    }
+function isAdminRequest(request) {
+    const adminEmail = request.headers.get('x-admin-email');
+    return adminEmail && ADMIN_EMAILS.includes(adminEmail);
 }
 
 // GET user details
 export async function GET(request, { params }) {
-    const cookieStore = await cookies();
-    if (!await isAdmin(cookieStore)) {
+    if (!isAdminRequest(request)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
@@ -90,10 +72,9 @@ export async function GET(request, { params }) {
     }
 }
 
-// DELETE user data (for GDPR compliance)
+// DELETE user data
 export async function DELETE(request, { params }) {
-    const cookieStore = await cookies();
-    if (!await isAdmin(cookieStore)) {
+    if (!isAdminRequest(request)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 

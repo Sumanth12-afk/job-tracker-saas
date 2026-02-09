@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -11,48 +10,15 @@ const ADMIN_EMAILS = [
     'nallandhigalsumanth@gmail.com'
 ];
 
-// Check if current user is admin
-async function isAdmin(cookieStore) {
-    try {
-        // Get auth token from cookie
-        const projectRef = supabaseUrl.match(/https:\/\/(.+)\.supabase\.co/)?.[1];
-        const authCookie = cookieStore.get(`sb-${projectRef}-auth-token`);
-
-        console.log('[ADMIN] Checking auth, projectRef:', projectRef);
-
-        if (!authCookie) {
-            console.log('[ADMIN] No auth cookie found');
-            return false;
-        }
-
-        let authData;
-        try {
-            // Cookie value might be URL encoded or have different structure
-            const cookieValue = decodeURIComponent(authCookie.value);
-            authData = JSON.parse(cookieValue);
-        } catch (e) {
-            // Try parsing directly
-            authData = JSON.parse(authCookie.value);
-        }
-
-        // The user email might be in different places depending on Supabase version
-        const userEmail = authData?.user?.email || authData?.email;
-
-        console.log('[ADMIN] User email from cookie:', userEmail);
-        console.log('[ADMIN] Is admin?', ADMIN_EMAILS.includes(userEmail));
-
-        return ADMIN_EMAILS.includes(userEmail);
-    } catch (e) {
-        console.error('[ADMIN] Auth check error:', e);
-        return false;
-    }
+// Check if request is from admin (via header set by client)
+function isAdminRequest(request) {
+    const adminEmail = request.headers.get('x-admin-email');
+    return adminEmail && ADMIN_EMAILS.includes(adminEmail);
 }
 
 export async function GET(request) {
-    const cookieStore = await cookies();
-
-    // Check admin access
-    if (!await isAdmin(cookieStore)) {
+    // Check admin access via header
+    if (!isAdminRequest(request)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
@@ -61,14 +27,7 @@ export async function GET(request) {
         const now = new Date();
 
         // Get date ranges
-        const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000).toISOString();
-        const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
         const thirtyDaysAgo = new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString();
-
-        // 1. Total Users (from auth.users via admin API)
-        const { count: totalUsers } = await supabase
-            .from('job_applications')
-            .select('user_id', { count: 'exact', head: true });
 
         // Get unique users
         const { data: uniqueUsers } = await supabase
@@ -78,18 +37,18 @@ export async function GET(request) {
 
         const uniqueUserIds = [...new Set(uniqueUsers?.map(u => u.user_id) || [])];
 
-        // 2. Total Job Applications
+        // Total Job Applications
         const { count: totalJobs } = await supabase
             .from('job_applications')
             .select('*', { count: 'exact', head: true });
 
-        // 3. Gmail-sourced jobs
+        // Gmail-sourced jobs
         const { count: gmailJobs } = await supabase
             .from('job_applications')
             .select('*', { count: 'exact', head: true })
             .eq('source', 'gmail');
 
-        // 4. Jobs by status
+        // Jobs by status
         const { data: statusData } = await supabase
             .from('job_applications')
             .select('status');
@@ -99,7 +58,7 @@ export async function GET(request) {
             statusCounts[job.status] = (statusCounts[job.status] || 0) + 1;
         });
 
-        // 5. Recent signups (last 30 days) - approximate from job_applications
+        // Recent activity (last 30 days)
         const { data: recentJobs } = await supabase
             .from('job_applications')
             .select('user_id, created_at')
@@ -123,7 +82,7 @@ export async function GET(request) {
             activeUsers: data.users.size
         }));
 
-        // 6. Gmail tokens status
+        // Gmail tokens status
         const { data: tokenData } = await supabase
             .from('gmail_tokens')
             .select('user_id, expires_at');
@@ -131,7 +90,7 @@ export async function GET(request) {
         const validTokens = (tokenData || []).filter(t => new Date(t.expires_at) > now).length;
         const expiredTokens = (tokenData || []).length - validTokens;
 
-        // 7. Get scan logs if table exists
+        // Get scan logs if table exists
         let scanStats = { total: 0, avgFound: 0, mlClassified: 0, ruleClassified: 0 };
         try {
             const { data: scanLogs, count: scanCount } = await supabase
