@@ -23,13 +23,67 @@ async function getUserIdFromCookie(cookieStore) {
     }
 }
 
-// Get access token from database or cookie
+// Refresh Gmail access token using refresh token
+async function refreshGmailToken(userId, refreshToken) {
+    try {
+        console.log(`[TOKEN REFRESH] Attempting refresh for user ${userId.substring(0, 8)}...`);
+
+        const response = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_CLIENT_SECRET,
+                refresh_token: refreshToken,
+                grant_type: 'refresh_token',
+            }),
+        });
+
+        const tokens = await response.json();
+
+        if (tokens.error) {
+            console.error('[TOKEN REFRESH] Failed:', tokens.error, tokens.error_description);
+            return null;
+        }
+
+        const newExpiresAt = new Date(Date.now() + (tokens.expires_in || 3600) * 1000).toISOString();
+
+        // Update tokens in database
+        const supabase = createClient(supabaseUrl, supabaseServiceKey);
+        const { error: dbError } = await supabase
+            .from('gmail_tokens')
+            .update({
+                access_token: tokens.access_token,
+                expires_at: newExpiresAt,
+                updated_at: new Date().toISOString(),
+            })
+            .eq('user_id', userId);
+
+        if (dbError) {
+            console.error('[TOKEN REFRESH] DB update failed:', dbError);
+        } else {
+            console.log(`[TOKEN REFRESH] ✓ Token refreshed successfully, expires at ${newExpiresAt}`);
+        }
+
+        return tokens.access_token;
+    } catch (error) {
+        console.error('[TOKEN REFRESH] Error:', error);
+        return null;
+    }
+}
+
+// Get access token from database or cookie (with auto-refresh)
 async function getAccessToken(cookieStore) {
     // Try cookie first (immediate access after OAuth)
     const pendingTokens = cookieStore.get('gmail_pending_tokens')?.value;
     if (pendingTokens) {
         const tokenData = JSON.parse(pendingTokens);
-        return tokenData.access_token;
+        // Check if cookie token is still valid
+        if (new Date(tokenData.expires_at) > new Date()) {
+            return tokenData.access_token;
+        }
     }
 
     // Try database
@@ -45,10 +99,24 @@ async function getAccessToken(cookieStore) {
 
     if (error || !data) return null;
 
-    // Check if token expired - TODO: implement refresh
-    if (new Date(data.expires_at) < new Date()) {
-        console.log('Token expired, needs refresh');
-        // For now, return the token anyway - Gmail might still accept it briefly
+    // Check if token expired
+    const expiresAt = new Date(data.expires_at);
+    const now = new Date();
+    const bufferMs = 5 * 60 * 1000; // 5 minute buffer before expiry
+
+    if (expiresAt.getTime() - bufferMs < now.getTime()) {
+        console.log('[TOKEN] Access token expired or expiring soon, attempting refresh...');
+
+        if (data.refresh_token) {
+            const newAccessToken = await refreshGmailToken(userId, data.refresh_token);
+            if (newAccessToken) {
+                return newAccessToken;
+            }
+            // If refresh failed, try the old token anyway (might still work briefly)
+            console.log('[TOKEN] Refresh failed, trying existing token...');
+        } else {
+            console.log('[TOKEN] No refresh token available');
+        }
     }
 
     return data.access_token;
