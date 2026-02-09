@@ -14,20 +14,36 @@ const ADMIN_EMAILS = [
 // Check if current user is admin
 async function isAdmin(cookieStore) {
     try {
-        const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
         // Get auth token from cookie
         const projectRef = supabaseUrl.match(/https:\/\/(.+)\.supabase\.co/)?.[1];
         const authCookie = cookieStore.get(`sb-${projectRef}-auth-token`);
 
-        if (!authCookie) return false;
+        console.log('[ADMIN] Checking auth, projectRef:', projectRef);
 
-        const authData = JSON.parse(authCookie.value);
-        const userEmail = authData.user?.email;
+        if (!authCookie) {
+            console.log('[ADMIN] No auth cookie found');
+            return false;
+        }
+
+        let authData;
+        try {
+            // Cookie value might be URL encoded or have different structure
+            const cookieValue = decodeURIComponent(authCookie.value);
+            authData = JSON.parse(cookieValue);
+        } catch (e) {
+            // Try parsing directly
+            authData = JSON.parse(authCookie.value);
+        }
+
+        // The user email might be in different places depending on Supabase version
+        const userEmail = authData?.user?.email || authData?.email;
+
+        console.log('[ADMIN] User email from cookie:', userEmail);
+        console.log('[ADMIN] Is admin?', ADMIN_EMAILS.includes(userEmail));
 
         return ADMIN_EMAILS.includes(userEmail);
     } catch (e) {
-        console.error('Admin check error:', e);
+        console.error('[ADMIN] Auth check error:', e);
         return false;
     }
 }

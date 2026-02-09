@@ -19,9 +19,15 @@ async function isAdmin(cookieStore) {
 
         if (!authCookie) return false;
 
-        const authData = JSON.parse(authCookie.value);
-        const userEmail = authData.user?.email;
+        let authData;
+        try {
+            const cookieValue = decodeURIComponent(authCookie.value);
+            authData = JSON.parse(cookieValue);
+        } catch (e) {
+            authData = JSON.parse(authCookie.value);
+        }
 
+        const userEmail = authData?.user?.email || authData?.email;
         return ADMIN_EMAILS.includes(userEmail);
     } catch (e) {
         return false;

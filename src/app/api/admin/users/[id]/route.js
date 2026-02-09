@@ -15,8 +15,17 @@ async function isAdmin(cookieStore) {
         const projectRef = supabaseUrl.match(/https:\/\/(.+)\.supabase\.co/)?.[1];
         const authCookie = cookieStore.get(`sb-${projectRef}-auth-token`);
         if (!authCookie) return false;
-        const authData = JSON.parse(authCookie.value);
-        return ADMIN_EMAILS.includes(authData.user?.email);
+
+        let authData;
+        try {
+            const cookieValue = decodeURIComponent(authCookie.value);
+            authData = JSON.parse(cookieValue);
+        } catch (e) {
+            authData = JSON.parse(authCookie.value);
+        }
+
+        const userEmail = authData?.user?.email || authData?.email;
+        return ADMIN_EMAILS.includes(userEmail);
     } catch (e) {
         return false;
     }
