@@ -29,6 +29,14 @@ export default function GmailConnect({ onJobsFound, isConnected, setIsConnected,
             const response = await fetch(`/api/gmail/scan?days=${timeRange}&userId=${userId}`);
             const data = await response.json();
 
+            // Handle rate limiting
+            if (response.status === 429) {
+                const retryAfter = data.retryAfter || 60;
+                setError(`⏱️ Slow down! Too many scans. Please wait ${retryAfter} seconds before scanning again.`);
+                setIsScanning(false);
+                return;
+            }
+
             if (data.error) {
                 throw new Error(data.error);
             }

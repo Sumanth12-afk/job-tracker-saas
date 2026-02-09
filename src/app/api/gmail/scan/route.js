@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { hybridClassify, classifyEmail } from '@/lib/emailClassifier';
+import { checkRateLimit, rateLimitHeaders } from '@/lib/rateLimit';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -748,6 +749,26 @@ export async function GET(request) {
             userId = await getUserIdFromCookie(cookieStore);
         }
         console.log('Gmail scan - userId:', userId ? userId.substring(0, 8) + '...' : 'null');
+
+        // Rate limiting check (5 scans per minute per user)
+        if (userId) {
+            const rateCheck = checkRateLimit(userId, 'gmail-scan');
+            if (!rateCheck.allowed) {
+                console.log(`[RATE LIMIT] User ${userId.substring(0, 8)}... exceeded limit. Reset in ${rateCheck.resetIn}s`);
+                return NextResponse.json(
+                    {
+                        error: 'Rate limit exceeded',
+                        message: `Too many scan requests. Please wait ${rateCheck.resetIn} seconds.`,
+                        retryAfter: rateCheck.resetIn
+                    },
+                    {
+                        status: 429,
+                        headers: rateLimitHeaders(rateCheck, 'gmail-scan')
+                    }
+                );
+            }
+            console.log(`[RATE LIMIT] User ${userId.substring(0, 8)}... - ${rateCheck.remaining}/${rateCheck.limit} requests remaining`);
+        }
 
         let existingGmailIds = new Set();
         let existingJobKeys = new Set(); // Fallback: company + date for jobs added before gmail_message_id
