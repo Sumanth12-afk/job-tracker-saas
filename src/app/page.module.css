@@ -826,3 +826,119 @@
 .featureItem:nth-child(6) {
   animation-delay: 0.3s;
 }
+
+/* ========== FAQ SECTION ========== */
+.faqSection {
+  padding: 6rem 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faqGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.faqItem {
+  background: rgba(26, 26, 62, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faqItem:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.faqQuestion {
+  width: 100%;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: #ffffff;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  gap: 1rem;
+}
+
+.faqQuestion:hover {
+  color: #a78bfa;
+}
+
+.faqIcon {
+  font-size: 1.75rem;
+  color: #8b5cf6;
+  transition: transform 0.3s ease;
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+.faqIconOpen {
+  transform: rotate(45deg);
+}
+
+.faqAnswer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faqAnswerOpen {
+  max-height: 300px;
+  padding: 0 2rem 1.5rem;
+}
+
+.faqAnswer p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ========== SCROLL REVEAL ANIMATIONS ========== */
+.scrollReveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scrollRevealVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sectionReveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.sectionRevealVisible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive FAQ */
+@media (max-width: 640px) {
+  .faqSection {
+    padding: 4rem 1.5rem;
+  }
+
+  .faqQuestion {
+    font-size: 0.9375rem;
+    padding: 1.25rem;
+  }
+
+  .faqAnswerOpen {
+    padding: 0 1.25rem 1.25rem;
+  }
+}
