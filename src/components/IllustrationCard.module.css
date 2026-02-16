@@ -1,0 +1,54 @@
+.card {
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+@media (min-width: 640px) {
+    .card {
+        padding: 1.5rem;
+    }
+}
+
+:global([data-theme="dark"]) .card {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Compact variant — less padding for logos strip etc. */
+.compact {
+    padding: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .compact {
+        padding: 1rem;
+    }
+}
+
+.compact.card {
+    box-shadow: none;
+}
+
+/* Inner image wrapper */
+.inner {
+    border-radius: 12px;
+    overflow: hidden;
+    background: transparent;
+}
+
+:global([data-theme="dark"]) .inner {
+    background: #0F172A;
+}
+
+/* The image itself */
+.image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    -webkit-user-select: none;
+}

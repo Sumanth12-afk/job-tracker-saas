@@ -1,0 +1,288 @@
+/* ========== SPLASH LANDING PAGE ========== */
+
+.splashContainer {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background: #050a0f;
+}
+
+/* ColorBends background layer */
+.bgLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+}
+
+/* Content overlay */
+.contentLayer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(5, 10, 15, 0.55) 0%, transparent 70%);
+}
+
+/* ========== GLASS NAV ========== */
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1000px;
+    width: 90%;
+    margin: 24px auto 0;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.logoIcon {
+    display: flex;
+    align-items: center;
+    color: #14b8a6;
+}
+
+.logoText {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.navRight {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navLink {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.navLink:hover {
+    color: #ffffff;
+}
+
+/* ========== HERO CENTER ========== */
+.heroCenter {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 24px;
+    gap: 28px;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+}
+
+/* Pill badge */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.02em;
+}
+
+.pillIcon {
+    display: flex;
+    align-items: center;
+    color: #14b8a6;
+}
+
+/* Headline */
+.headline {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    max-width: 700px;
+    letter-spacing: -0.03em;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Animated gradient accent word */
+.gradientText {
+    background: linear-gradient(90deg,
+            #14b8a6 0%,
+            #5eead4 20%,
+            #a78bfa 40%,
+            #f472b6 60%,
+            #5eead4 80%,
+            #14b8a6 100%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShimmer 4s ease-in-out infinite;
+}
+
+@keyframes gradientShimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.7;
+    max-width: 520px;
+    font-weight: 400;
+    text-shadow: 0 1px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* CTA buttons row */
+.ctaRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.ctaPrimary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: #ffffff;
+    color: #050a0f;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 100px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: -0.01em;
+}
+
+.ctaPrimary:hover {
+    background: #f0f0f0;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+}
+
+.ctaSecondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-radius: 100px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.ctaSecondary:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Trust line */
+.trustLine {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.trustIcon {
+    display: flex;
+    align-items: center;
+    color: #14b8a6;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .nav {
+        padding: 10px 16px;
+        margin-top: 16px;
+    }
+
+    .heroCenter {
+        gap: 22px;
+        padding: 0 20px;
+    }
+
+    .headline {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
+
+    .ctaRow {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .ctaPrimary,
+    .ctaSecondary {
+        width: 100%;
+        max-width: 280px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav {
+        padding: 8px 14px;
+        border-radius: 20px;
+    }
+
+    .headline {
+        font-size: 1.6rem;
+    }
+
+    .navLink {
+        display: none;
+    }
+}

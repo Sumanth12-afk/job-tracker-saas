@@ -2,41 +2,21 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-const ThemeContext = createContext({});
+const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState('light');
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        // Check localStorage first, then system preference
-        const stored = localStorage.getItem('theme');
-        if (stored) {
-            setTheme(stored);
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setTheme('dark');
-        }
+        // Force dark mode always
+        document.documentElement.setAttribute('data-theme', 'dark');
     }, []);
 
-    useEffect(() => {
-        if (mounted) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-        }
-    }, [theme, mounted]);
-
-    const toggleTheme = () => {
-        setTheme(prev => prev === 'light' ? 'dark' : 'light');
-    };
-
-    // Prevent flash of wrong theme
-    if (!mounted) {
-        return null;
-    }
+    if (!mounted) return null;
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext.Provider value={{ theme: 'dark' }}>
             {children}
         </ThemeContext.Provider>
     );
@@ -44,8 +24,8 @@ export function ThemeProvider({ children }) {
 
 export function useTheme() {
     const context = useContext(ThemeContext);
-    if (context === undefined) {
-        throw new Error('useTheme must be used within a ThemeProvider');
+    if (!context) {
+        return { theme: 'dark' };
     }
     return context;
 }

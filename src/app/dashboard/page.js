@@ -16,6 +16,7 @@ import Analytics from '@/components/Analytics';
 import ExportButton from '@/components/ExportButton';
 import ResumeLibrary from '@/components/ResumeLibrary';
 import OnboardingTour from '@/components/OnboardingTour';
+import { ClipboardList, BarChart3, Settings, LogOut, AlertTriangle, Trash2 } from 'lucide-react';
 import styles from './dashboard.module.css';
 
 export default function DashboardPage() {
@@ -284,7 +285,7 @@ export default function DashboardPage() {
             <header className={styles.header}>
                 <div className={styles.headerLeft}>
                     <div className={styles.logo}>
-                        <span className={styles.logoIcon}>📋</span>
+                        <span className={styles.logoIcon}><ClipboardList size={24} strokeWidth={2} /></span>
                         <span className={styles.logoText}>JobTracker</span>
                     </div>
                 </div>
@@ -294,7 +295,8 @@ export default function DashboardPage() {
                         className={`btn btn-ghost btn-sm ${showAnalytics ? styles.activeBtn : ''}`}
                         title="Analytics"
                     >
-                        📊 <span className={styles.btnText}>Analytics</span>
+                        <span className={styles.btnIcon}><BarChart3 size={18} strokeWidth={1.75} /></span>
+                        <span className={styles.btnText}>Analytics</span>
                     </button>
                     <ExportButton jobs={jobs} />
                     <button
@@ -303,14 +305,14 @@ export default function DashboardPage() {
                         data-tour="settings"
                         title="Settings"
                     >
-                        ⚙️ <span className={styles.btnText}>Settings</span>
+                        <span className={styles.btnIcon}><Settings size={18} strokeWidth={1.75} /></span>
+                        <span className={styles.btnText}>Settings</span>
                     </button>
-                    <button onClick={toggleTheme} className="btn btn-ghost btn-sm" title="Toggle theme">
-                        {theme === 'dark' ? '🌙' : '☀️'}
-                    </button>
+
                     <span className={styles.userEmail}>{user.email}</span>
                     <button onClick={handleLogout} className={`btn btn-ghost btn-sm ${styles.logoutBtn}`} title="Log out">
-                        🚪 <span className={styles.btnText}>Log out</span>
+                        <span className={styles.btnIcon}><LogOut size={18} strokeWidth={1.75} /></span>
+                        <span className={styles.btnText}>Log out</span>
                     </button>
                 </div>
             </header>
@@ -334,19 +336,19 @@ export default function DashboardPage() {
 
                         {/* Danger Zone */}
                         <div className={styles.dangerZone}>
-                            <h4>⚠️ Danger Zone</h4>
+                            <h4><AlertTriangle size={16} strokeWidth={2} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} /> Danger Zone</h4>
                             <p>Delete all your job applications. This cannot be undone.</p>
                             <button
                                 onClick={handleDeleteAllJobs}
                                 className="btn"
                                 style={{
-                                    backgroundColor: 'var(--color-error)',
+                                    backgroundColor: 'var(--danger)',
                                     color: 'white',
                                     marginTop: 'var(--space-2)'
                                 }}
                                 disabled={jobs.length === 0}
                             >
-                                🗑️ Delete All Jobs ({jobs.length})
+                                <Trash2 size={16} strokeWidth={2} /> Delete All Jobs ({jobs.length})
                             </button>
                         </div>
                     </div>

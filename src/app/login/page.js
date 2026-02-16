@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { ClipboardList } from 'lucide-react';
+
 import styles from './login.module.css';
 
 export default function LoginPage() {
@@ -39,10 +41,11 @@ export default function LoginPage() {
 
     return (
         <div className={styles.container}>
+
             <div className={styles.formWrapper}>
                 <div className={styles.header}>
                     <Link href="/" className={styles.logo}>
-                        <span className={styles.logoIcon}>📋</span>
+                        <span className={styles.logoIcon}><ClipboardList size={24} strokeWidth={2} /></span>
                         <span className={styles.logoText}>JobTracker</span>
                     </Link>
                     <h1 className={styles.title}>Welcome back</h1>
@@ -104,7 +107,7 @@ export default function LoginPage() {
 
                 <button
                     onClick={handleGoogleLogin}
-                    className={`btn btn-secondary w-full ${styles.googleBtn}`}
+                    className={styles.googleBtn}
                 >
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                         <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4" />

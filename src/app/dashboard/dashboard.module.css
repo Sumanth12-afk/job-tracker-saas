@@ -5,13 +5,15 @@
     align-items: center;
     justify-content: center;
     gap: var(--space-4);
-    color: var(--text-secondary);
+    color: var(--muted);
+    background: var(--bg);
 }
 
 .container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background: var(--bg);
 }
 
 /* Header */
@@ -19,9 +21,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-5) var(--space-8);
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--color-gray-100);
+    padding: var(--space-4) var(--space-8);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
     z-index: 40;
@@ -40,36 +42,43 @@
 }
 
 .logoIcon {
-    font-size: 1.75rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
 }
 
 .logoText {
     font-size: 1.25rem;
     font-weight: var(--font-bold);
-    color: var(--text-primary);
+    color: var(--text);
 }
 
 .headerRight {
     display: flex;
     align-items: center;
-    gap: var(--space-5);
+    gap: var(--space-3);
 }
 
 .userEmail {
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
+    font-size: 0.875rem;
+    color: var(--muted);
     font-weight: var(--font-medium);
 }
 
-/* Larger header buttons */
+/* Header buttons */
 .header .btn {
-    font-size: 0.9375rem;
-    padding: var(--space-2) var(--space-4);
+    font-size: 0.875rem;
+    padding: var(--space-2) var(--space-3);
 }
 
 .activeBtn {
-    background: var(--color-primary-50);
-    color: var(--color-primary-600);
+    background: var(--accent-bg);
+    color: var(--primary);
+}
+
+.btnIcon {
+    display: flex;
+    align-items: center;
 }
 
 .btnText {
@@ -77,7 +86,7 @@
 }
 
 .logoutBtn {
-    color: var(--text-secondary);
+    color: var(--muted);
 }
 
 /* Main */
@@ -180,20 +189,20 @@
 .dangerZone {
     margin-top: var(--space-6);
     padding: var(--space-4);
-    border: 1px solid #fecaca;
+    border: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: var(--radius-lg);
-    background: #fef2f2;
+    background: rgba(239, 68, 68, 0.05);
 }
 
 .dangerZone h4 {
     margin: 0 0 var(--space-2) 0;
-    color: #991b1b;
+    color: var(--danger);
     font-size: var(--text-sm);
 }
 
 .dangerZone p {
     margin: 0;
-    color: #7f1d1d;
+    color: var(--muted);
     font-size: var(--text-sm);
 }
 
@@ -213,11 +222,6 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.activeBtn {
-    background: var(--color-primary-50);
-    color: var(--color-primary-600);
 }
 
 /* Toast Notifications */
@@ -248,15 +252,15 @@
 }
 
 .toast.success {
-    background: #ecfdf5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
+    background: rgba(22, 163, 74, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(22, 163, 74, 0.2);
 }
 
 .toast.error {
-    background: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .toastClose {
@@ -265,6 +269,7 @@
     font-size: var(--text-xl);
     cursor: pointer;
     opacity: 0.6;
+    color: inherit;
     transition: opacity var(--transition-fast);
 }
 

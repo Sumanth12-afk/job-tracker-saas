@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { ClipboardList } from 'lucide-react';
+
 import styles from './signup.module.css';
 
 export default function SignupPage() {
@@ -55,7 +57,9 @@ export default function SignupPage() {
             <div className={styles.container}>
                 <div className={styles.formWrapper}>
                     <div className={styles.successState}>
-                        <div className={styles.successIcon}>✉️</div>
+                        <div className={styles.successIcon}>
+                            <ClipboardList size={48} strokeWidth={1.5} />
+                        </div>
                         <h1 className={styles.title}>Check your email</h1>
                         <p className={styles.subtitle}>
                             We&apos;ve sent you a confirmation link. Click it to activate your account.
@@ -71,10 +75,13 @@ export default function SignupPage() {
 
     return (
         <div className={styles.container}>
+            <div className={styles.themeToggleWrap}>
+
+            </div>
             <div className={styles.formWrapper}>
                 <div className={styles.header}>
                     <Link href="/" className={styles.logo}>
-                        <span className={styles.logoIcon}>📋</span>
+                        <span className={styles.logoIcon}><ClipboardList size={24} strokeWidth={2} /></span>
                         <span className={styles.logoText}>JobTracker</span>
                     </Link>
                     <h1 className={styles.title}>Create your account</h1>
@@ -149,7 +156,7 @@ export default function SignupPage() {
 
                 <button
                     onClick={handleGoogleLogin}
-                    className={`btn btn-secondary w-full ${styles.googleBtn}`}
+                    className={styles.googleBtn}
                 >
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                         <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4" />
