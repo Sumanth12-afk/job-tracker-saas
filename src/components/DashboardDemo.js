@@ -9,6 +9,7 @@ import {
     ArrowRight, Target, Award, MapPin, DollarSign,
     GripVertical, AlertCircle, CheckCircle2, XCircle,
     Upload, Download, Eye, Star, MoreVertical,
+    LogOut, Shield, Lock, Globe, Trash2, UserCircle,
 } from 'lucide-react';
 
 /* ============================================================
@@ -65,6 +66,7 @@ const NAV_ITEMS = [
     { key: 'followups', label: 'Follow-ups', icon: Clock },
     { key: 'analytics', label: 'Analytics', icon: BarChart3 },
     { key: 'resumes', label: 'Resume Library', icon: FileText },
+    { key: 'settings', label: 'Settings', icon: Settings },
 ];
 
 const KANBAN_COLS = [
@@ -106,10 +108,10 @@ export default function DashboardDemo() {
                         })}
                     </nav>
                     <div className={styles.sidebarBottom}>
-                        <div className={styles.sidebarItem}>
-                            <Settings size={14} />
-                            <span>Settings</span>
-                        </div>
+                        <button className={styles.logoutBtn}>
+                            <LogOut size={14} />
+                            <span>Logout</span>
+                        </button>
                     </div>
                 </aside>
 
@@ -137,6 +139,7 @@ export default function DashboardDemo() {
                         {activeView === 'followups' && <FollowupsView />}
                         {activeView === 'analytics' && <AnalyticsView />}
                         {activeView === 'resumes' && <ResumesView />}
+                        {activeView === 'settings' && <SettingsView />}
                     </div>
                 </div>
             </div>
@@ -473,6 +476,144 @@ function ResumesView() {
                         </div>
                     </div>
                 ))}
+            </div>
+        </div>
+    );
+}
+
+/* ============================================================
+   VIEW: SETTINGS (Google Connection + Privacy + Logout)
+   ============================================================ */
+function SettingsView() {
+    return (
+        <div className={styles.settingsView}>
+            {/* Google Connection */}
+            <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>
+                    <Globe size={14} /> Gmail Integration
+                </h4>
+                <div className={styles.googleCard}>
+                    <div className={styles.googleCardTop}>
+                        <div className={styles.googleLogo}>
+                            <svg width="18" height="18" viewBox="0 0 48 48">
+                                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                            </svg>
+                        </div>
+                        <div className={styles.googleInfo}>
+                            <span className={styles.googleTitle}>Google Account</span>
+                            <span className={styles.googleEmail}>demo.user@gmail.com</span>
+                        </div>
+                        <span className={styles.connectedBadge}>
+                            <CheckCircle2 size={10} /> Connected
+                        </span>
+                    </div>
+
+                    <div className={styles.permissionsList}>
+                        <span className={styles.permissionsLabel}>Permissions granted:</span>
+                        <div className={styles.permissionItem}>
+                            <Mail size={10} /> Read email subjects & bodies (for job detection)
+                        </div>
+                        <div className={styles.permissionItem}>
+                            <Eye size={10} /> View email metadata (sender, date)
+                        </div>
+                        <div className={styles.permissionItem}>
+                            <Search size={10} /> Search emails for job-related keywords
+                        </div>
+                    </div>
+
+                    <div className={styles.googleActions}>
+                        <button className={styles.scanBtn}>
+                            <RefreshCw size={10} /> Scan Now
+                        </button>
+                        <button className={styles.disconnectBtn}>
+                            <XCircle size={10} /> Disconnect
+                        </button>
+                    </div>
+
+                    <div className={styles.lastScanInfo}>
+                        <span>Last scan: 2 hours ago — 3 new applications found</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Privacy & Security */}
+            <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>
+                    <Shield size={14} /> Privacy & Security
+                </h4>
+                <div className={styles.privacyCard}>
+                    <p className={styles.privacyIntro}>
+                        We take your privacy seriously. Here&apos;s exactly how your Gmail data is handled:
+                    </p>
+                    <div className={styles.privacyList}>
+                        <div className={styles.privacyItem}>
+                            <div className={styles.privacyIcon}>
+                                <Eye size={12} />
+                            </div>
+                            <div className={styles.privacyContent}>
+                                <span className={styles.privacyTitle}>Read-Only Access</span>
+                                <span className={styles.privacyDesc}>We only read your emails — we can never send, delete, or modify them.</span>
+                            </div>
+                        </div>
+                        <div className={styles.privacyItem}>
+                            <div className={styles.privacyIcon}>
+                                <Search size={12} />
+                            </div>
+                            <div className={styles.privacyContent}>
+                                <span className={styles.privacyTitle}>Smart Filtering</span>
+                                <span className={styles.privacyDesc}>We only scan for job-related emails (confirmations, interviews, offers). Personal emails are ignored.</span>
+                            </div>
+                        </div>
+                        <div className={styles.privacyItem}>
+                            <div className={styles.privacyIcon}>
+                                <Lock size={12} />
+                            </div>
+                            <div className={styles.privacyContent}>
+                                <span className={styles.privacyTitle}>Encrypted & Secure</span>
+                                <span className={styles.privacyDesc}>All data is encrypted in transit (TLS) and at rest. Your tokens are securely stored.</span>
+                            </div>
+                        </div>
+                        <div className={styles.privacyItem}>
+                            <div className={styles.privacyIcon}>
+                                <XCircle size={12} />
+                            </div>
+                            <div className={styles.privacyContent}>
+                                <span className={styles.privacyTitle}>No Third-Party Sharing</span>
+                                <span className={styles.privacyDesc}>Your data is never sold, shared, or used for advertising. Period.</span>
+                            </div>
+                        </div>
+                        <div className={styles.privacyItem}>
+                            <div className={styles.privacyIcon}>
+                                <Trash2 size={12} />
+                            </div>
+                            <div className={styles.privacyContent}>
+                                <span className={styles.privacyTitle}>Disconnect Anytime</span>
+                                <span className={styles.privacyDesc}>Revoke access with one click. We&apos;ll delete all stored tokens immediately.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Account */}
+            <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>
+                    <UserCircle size={14} /> Account
+                </h4>
+                <div className={styles.accountCard}>
+                    <div className={styles.accountRow}>
+                        <div className={styles.accountInfo}>
+                            <span className={styles.accountName}>Demo User</span>
+                            <span className={styles.accountEmail}>demo.user@gmail.com</span>
+                        </div>
+                        <button className={styles.logoutBtnLarge}>
+                            <LogOut size={12} /> Log Out
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -1064,6 +1064,286 @@
     color: #14b8a6;
 }
 
+/* ================ SETTINGS VIEW ================ */
+.logoutBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    color: #f87171;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    width: 100%;
+    transition: all 0.15s;
+}
+
+.logoutBtn:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.settingsView {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.settingsSection {
+    display: block;
+}
+
+.settingsSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #e5e7eb;
+    margin: 0 0 8px;
+}
+
+/* Google Card */
+.googleCard {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.googleCardTop {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.googleLogo {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.googleInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.googleTitle {
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.googleEmail {
+    font-size: 0.45rem;
+    color: #6b7280;
+}
+
+.connectedBadge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+    font-size: 0.42rem;
+    font-weight: 600;
+}
+
+/* Permissions */
+.permissionsList {
+    padding: 8px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.permissionsLabel {
+    font-size: 0.45rem;
+    font-weight: 600;
+    color: #9ca3af;
+    margin-bottom: 2px;
+}
+
+.permissionItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.45rem;
+    color: #d1d5db;
+}
+
+.permissionItem svg {
+    color: #14b8a6;
+    flex-shrink: 0;
+}
+
+/* Google Actions */
+.googleActions {
+    display: flex;
+    gap: 6px;
+}
+
+.scanBtn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 5px;
+    background: rgba(20, 184, 166, 0.12);
+    border: 1px solid rgba(20, 184, 166, 0.2);
+    color: #14b8a6;
+    font-size: 0.45rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.disconnectBtn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 5px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    font-size: 0.45rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.lastScanInfo {
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.lastScanInfo span {
+    font-size: 0.42rem;
+    color: #6b7280;
+}
+
+/* Privacy Card */
+.privacyCard {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.privacyIntro {
+    font-size: 0.5rem;
+    color: #9ca3af;
+    margin: 0 0 10px;
+    line-height: 1.5;
+}
+
+.privacyList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.privacyItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.privacyIcon {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    background: rgba(20, 184, 166, 0.1);
+    color: #14b8a6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.privacyContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.privacyTitle {
+    font-size: 0.5rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.privacyDesc {
+    font-size: 0.42rem;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+/* Account Card */
+.accountCard {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.accountRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.accountInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.accountName {
+    font-size: 0.58rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.accountEmail {
+    font-size: 0.45rem;
+    color: #6b7280;
+}
+
+.logoutBtnLarge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    font-size: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.logoutBtnLarge:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
     .demoFrame {
