@@ -1,30 +1,35 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useTheme } from '@/context/ThemeContext';
 import { supabase } from '@/lib/supabase';
-import SummaryBar from '@/components/SummaryBar';
+
+// Components
+import Sidebar from '@/components/Sidebar';
+import DashboardHome from '@/components/DashboardHome';
 import KanbanBoard from '@/components/KanbanBoard';
-import AddJobButton from '@/components/AddJobButton';
 import AddJobModal from '@/components/AddJobModal';
 import JobDetailDrawer from '@/components/JobDetailDrawer';
 import SearchFilter from '@/components/SearchFilter';
 import GmailConnect from '@/components/GmailConnect';
 import Analytics from '@/components/Analytics';
-import ExportButton from '@/components/ExportButton';
 import ResumeLibrary from '@/components/ResumeLibrary';
+import FollowUpCenter from '@/components/FollowUpCenter';
 import OnboardingTour from '@/components/OnboardingTour';
-import { ClipboardList, BarChart3, Settings, LogOut, AlertTriangle, Trash2 } from 'lucide-react';
+
+import { Search, RefreshCw, Plus, AlertTriangle, Trash2 } from 'lucide-react';
 import styles from './dashboard.module.css';
 
 export default function DashboardPage() {
     const { user, loading: authLoading, signOut } = useAuth();
-    const { theme, toggleTheme } = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
 
+    // View state
+    const [activeView, setActiveView] = useState('dashboard');
+
+    // Data state
     const [jobs, setJobs] = useState([]);
     const [filteredJobs, setFilteredJobs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -32,8 +37,6 @@ export default function DashboardPage() {
     const [selectedJob, setSelectedJob] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [showSettings, setShowSettings] = useState(false);
-    const [showAnalytics, setShowAnalytics] = useState(false);
     const [gmailConnected, setGmailConnected] = useState(false);
     const [notification, setNotification] = useState(null);
 
@@ -45,7 +48,6 @@ export default function DashboardPage() {
         if (gmailConnectedParam === 'true') {
             setGmailConnected(true);
             setNotification({ type: 'success', message: 'Gmail connected successfully!' });
-            // Clean URL
             window.history.replaceState({}, '', '/dashboard');
         } else if (gmailError) {
             setNotification({ type: 'error', message: `Gmail connection failed: ${gmailError}` });
@@ -155,8 +157,8 @@ export default function DashboardPage() {
                         status: job.status,
                         source: 'gmail',
                         user_id: user.id,
-                        gmail_message_id: job.gmail_message_id || job.id, // Store message ID for duplicate detection
-                        contact_email: job.contact_email, // Store email for follow-up feature
+                        gmail_message_id: job.gmail_message_id || job.id,
+                        contact_email: job.contact_email,
                     }])
                     .select()
                     .single();
@@ -234,6 +236,10 @@ export default function DashboardPage() {
         await handleUpdateJob(id, { status: newStatus });
     };
 
+    const handleMarkFollowedUp = async (id) => {
+        await handleUpdateJob(id, { followed_up: true });
+    };
+
     const handleLogout = async () => {
         await signOut();
         router.push('/');
@@ -252,76 +258,75 @@ export default function DashboardPage() {
         return null;
     }
 
-    // Calculate stats
-    const stats = {
-        total: jobs.length,
-        interviews: jobs.filter(j => j.status === 'Interview').length,
-        offers: jobs.filter(j => j.status === 'Offer').length,
-        pending: jobs.filter(j => {
-            if (j.status !== 'Applied' || j.followed_up) return false;
-            const daysSinceApplied = Math.floor(
-                (new Date() - new Date(j.date_applied)) / (1000 * 60 * 60 * 24)
-            );
-            return daysSinceApplied >= 7;
-        }).length,
+    // ---- VIEW TITLES ----
+    const viewTitles = {
+        dashboard: 'Dashboard',
+        applications: 'Applications',
+        followups: 'Follow-up Center',
+        analytics: 'Analytics',
+        resume: 'Resume Library',
+        settings: 'Settings',
     };
 
-    return (
-        <div className={styles.container}>
-            {/* Notification Toast */}
-            {notification && (
-                <div className={`${styles.toast} ${styles[notification.type]}`}>
-                    {notification.message}
-                    <button
-                        onClick={() => setNotification(null)}
-                        className={styles.toastClose}
-                    >
-                        ×
-                    </button>
-                </div>
-            )}
+    const viewSubtitles = {
+        applications: 'Track your job applications from interest to offer',
+        followups: 'Stay on top of your applications with smart follow-ups',
+        analytics: 'Track your progress and optimize your strategy',
+        resume: 'Manage your base resume and tailored versions',
+        settings: 'Manage your account and integrations',
+    };
 
-            {/* Header */}
-            <header className={styles.header}>
-                <div className={styles.headerLeft}>
-                    <div className={styles.logo}>
-                        <span className={styles.logoIcon}><ClipboardList size={24} strokeWidth={2} /></span>
-                        <span className={styles.logoText}>JobTracker</span>
-                    </div>
-                </div>
-                <div className={styles.headerRight}>
-                    <button
-                        onClick={() => setShowAnalytics(!showAnalytics)}
-                        className={`btn btn-ghost btn-sm ${showAnalytics ? styles.activeBtn : ''}`}
-                        title="Analytics"
-                    >
-                        <span className={styles.btnIcon}><BarChart3 size={18} strokeWidth={1.75} /></span>
-                        <span className={styles.btnText}>Analytics</span>
-                    </button>
-                    <ExportButton jobs={jobs} />
-                    <button
-                        onClick={() => setShowSettings(!showSettings)}
-                        className={`btn btn-ghost btn-sm ${showSettings ? styles.activeBtn : ''}`}
-                        data-tour="settings"
-                        title="Settings"
-                    >
-                        <span className={styles.btnIcon}><Settings size={18} strokeWidth={1.75} /></span>
-                        <span className={styles.btnText}>Settings</span>
-                    </button>
+    // ---- RENDER VIEW CONTENT ----
+    const renderContent = () => {
+        switch (activeView) {
+            case 'dashboard':
+                return (
+                    <DashboardHome
+                        jobs={jobs}
+                        onViewChange={setActiveView}
+                    />
+                );
 
-                    <span className={styles.userEmail}>{user.email}</span>
-                    <button onClick={handleLogout} className={`btn btn-ghost btn-sm ${styles.logoutBtn}`} title="Log out">
-                        <span className={styles.btnIcon}><LogOut size={18} strokeWidth={1.75} /></span>
-                        <span className={styles.btnText}>Log out</span>
-                    </button>
-                </div>
-            </header>
+            case 'applications':
+                return (
+                    <>
+                        <div className={styles.controlsRow}>
+                            <SearchFilter
+                                searchQuery={searchQuery}
+                                onSearchChange={setSearchQuery}
+                                statusFilter={statusFilter}
+                                onStatusChange={setStatusFilter}
+                            />
+                        </div>
+                        <div data-tour="kanban-board">
+                            <KanbanBoard
+                                jobs={filteredJobs}
+                                onJobClick={setSelectedJob}
+                                onStatusChange={handleStatusChange}
+                                userEmail={user?.email}
+                            />
+                        </div>
+                    </>
+                );
 
-            {/* Main Content */}
-            <main className={styles.main}>
-                {/* Settings Panel */}
-                {showSettings && (
-                    <div className={styles.settingsPanel}>
+            case 'followups':
+                return (
+                    <FollowUpCenter
+                        jobs={jobs}
+                        onJobClick={setSelectedJob}
+                        onMarkFollowedUp={handleMarkFollowedUp}
+                    />
+                );
+
+            case 'analytics':
+                return <Analytics jobs={jobs} />;
+
+            case 'resume':
+                return <ResumeLibrary userId={user?.id} mode="manage" />;
+
+            case 'settings':
+                return (
+                    <div className={styles.settingsContent}>
                         <div data-tour="gmail-connect">
                             <GmailConnect
                                 onJobsFound={handleAddJobsFromGmail}
@@ -331,12 +336,13 @@ export default function DashboardPage() {
                             />
                         </div>
 
-                        {/* Resume Library */}
                         <ResumeLibrary userId={user?.id} mode="manage" />
 
-                        {/* Danger Zone */}
                         <div className={styles.dangerZone}>
-                            <h4><AlertTriangle size={16} strokeWidth={2} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} /> Danger Zone</h4>
+                            <h4>
+                                <AlertTriangle size={16} strokeWidth={2} style={{ display: 'inline', verticalAlign: '-2px', marginRight: '4px' }} />
+                                Danger Zone
+                            </h4>
                             <p>Delete all your job applications. This cannot be undone.</p>
                             <button
                                 onClick={handleDeleteAllJobs}
@@ -352,45 +358,87 @@ export default function DashboardPage() {
                             </button>
                         </div>
                     </div>
-                )}
+                );
 
-                {/* Analytics Panel */}
-                {showAnalytics && (
-                    <div className={styles.analyticsPanel}>
-                        <Analytics jobs={jobs} />
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <div className={styles.layout}>
+            {/* Sidebar */}
+            <Sidebar
+                activeView={activeView}
+                onViewChange={setActiveView}
+                onLogout={handleLogout}
+            />
+
+            {/* Main Area */}
+            <div className={styles.mainArea}>
+                {/* Top Bar */}
+                <header className={styles.topBar}>
+                    <div className={styles.searchBox}>
+                        <Search size={16} className={styles.searchIcon} />
+                        <input
+                            type="text"
+                            placeholder="Search applications..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className={styles.searchInput}
+                        />
                     </div>
-                )}
 
-                {/* Summary Bar */}
-                <SummaryBar stats={stats} />
+                    <div className={styles.topBarRight}>
+                        <button
+                            onClick={fetchJobs}
+                            className={styles.refreshBtn}
+                            title="Refresh"
+                        >
+                            <RefreshCw size={16} />
+                        </button>
 
-                {/* Search & Filter */}
-                <div className={styles.controlsRow}>
-                    <SearchFilter
-                        searchQuery={searchQuery}
-                        onSearchChange={setSearchQuery}
-                        statusFilter={statusFilter}
-                        onStatusChange={setStatusFilter}
-                    />
-                </div>
+                        <button
+                            onClick={() => setIsAddModalOpen(true)}
+                            className={styles.addBtn}
+                            data-tour="add-job"
+                        >
+                            <Plus size={16} strokeWidth={2.5} />
+                            <span>Add Application</span>
+                        </button>
+                    </div>
+                </header>
 
-                {/* Kanban Board */}
-                <div data-tour="kanban-board">
-                    <KanbanBoard
-                        jobs={filteredJobs}
-                        onJobClick={setSelectedJob}
-                        onStatusChange={handleStatusChange}
-                        userEmail={user?.email}
-                    />
-                </div>
-            </main>
+                {/* Page Content */}
+                <main className={styles.content}>
+                    {/* Page Title (not for dashboard home) */}
+                    {activeView !== 'dashboard' && (
+                        <div className={styles.pageHeader}>
+                            <h1 className={styles.pageTitle}>{viewTitles[activeView]}</h1>
+                            {viewSubtitles[activeView] && (
+                                <p className={styles.pageSubtitle}>{viewSubtitles[activeView]}</p>
+                            )}
+                        </div>
+                    )}
 
-            {/* Floating Add Button */}
-            <div data-tour="add-job">
-                <AddJobButton onClick={() => setIsAddModalOpen(true)} />
+                    {renderContent()}
+                </main>
             </div>
 
-            {/* Onboarding Tour for New Users */}
+            {/* Notification Toast */}
+            {notification && (
+                <div className={`${styles.toast} ${styles[notification.type]}`}>
+                    {notification.message}
+                    <button
+                        onClick={() => setNotification(null)}
+                        className={styles.toastClose}
+                    >
+                        ×
+                    </button>
+                </div>
+            )}
+
+            {/* Onboarding Tour */}
             <OnboardingTour userId={user?.id} />
 
             {/* Add Job Modal */}

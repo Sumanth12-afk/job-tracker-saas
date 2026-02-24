@@ -1,0 +1,148 @@
+/* ========== SIDEBAR ========== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+    transition: transform 0.25s ease;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 24px 24px 20px;
+}
+
+.logoIcon {
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+}
+
+.logoText {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+}
+
+/* Navigation */
+.nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 12px;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: var(--radius-lg);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    width: 100%;
+    text-align: left;
+    position: relative;
+}
+
+.navItem:hover {
+    color: var(--text);
+    background: var(--accent-bg);
+}
+
+.navItem.active {
+    color: var(--primary);
+    background: var(--accent-bg);
+    font-weight: 600;
+}
+
+.navItem.active::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--primary);
+}
+
+/* Bottom section */
+.bottom {
+    padding: 8px 12px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.logoutBtn {
+    color: var(--muted);
+    opacity: 0.7;
+}
+
+.logoutBtn:hover {
+    color: var(--danger);
+    opacity: 1;
+    background: rgba(239, 68, 68, 0.08);
+}
+
+/* Hamburger (mobile only) */
+.hamburger {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 60;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 8px;
+    color: var(--text);
+    cursor: pointer;
+}
+
+/* Overlay (mobile only) */
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 45;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .hamburger {
+        display: flex;
+        align-items: center;
+    }
+
+    .overlay {
+        display: block;
+    }
+}

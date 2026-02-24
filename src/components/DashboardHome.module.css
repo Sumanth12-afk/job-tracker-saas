@@ -1,0 +1,366 @@
+/* ========== DASHBOARD HOME ========== */
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ---- STAT CARDS GRID ---- */
+.statGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.statCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: border-color 0.15s ease;
+}
+
+.statCard:hover {
+    border-color: var(--primary);
+}
+
+.statIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.iconApplied {
+    background: rgba(99, 102, 241, 0.12);
+    color: #818cf8;
+}
+
+.iconInterview {
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+}
+
+.iconOffer {
+    background: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+}
+
+.iconRate {
+    background: rgba(20, 184, 166, 0.12);
+    color: var(--primary);
+}
+
+.statInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.statLabel {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.statNumber {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+}
+
+.statDelta {
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.statDelta.negative {
+    color: var(--danger);
+}
+
+/* ---- MIDDLE ROW ---- */
+.middleRow {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 16px;
+}
+
+/* ---- NEXT ACTIONS ---- */
+.nextActions {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.sectionTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.sectionSubtitle {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 4px 0 0;
+}
+
+.viewAllBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.15s ease;
+    padding: 0;
+}
+
+.viewAllBtn:hover {
+    color: var(--primary);
+}
+
+.actionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.actionItem {
+    display: flex;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.actionItem:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.actionItem:first-child {
+    padding-top: 0;
+}
+
+.actionIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.actionContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.actionTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actionBadge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    text-transform: capitalize;
+}
+
+.badgeFollowUp {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+
+.badgeReply {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+
+.badgeInterviewPrep {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+}
+
+.actionTime {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.actionCompany {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.actionRole {
+    font-size: 0.82rem;
+    color: var(--primary);
+}
+
+.actionNote {
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+/* ---- RECENT ACTIVITY ---- */
+.recentActivity {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+}
+
+.activityList {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 16px;
+}
+
+.activityItem {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.activityItem:last-child {
+    border-bottom: none;
+}
+
+.activityIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-bg);
+    color: var(--muted);
+    flex-shrink: 0;
+}
+
+.activityInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.activityCompany {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.activityRole {
+    font-size: 0.78rem;
+    color: var(--primary);
+}
+
+.activityTime {
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+/* ---- BOTTOM METRICS ---- */
+.bottomMetrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.metricCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metricLabel {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.metricValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.metricDelta {
+    font-size: 0.78rem;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.metricDelta.negative {
+    color: var(--danger);
+}
+
+.metricNote {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.emptyText {
+    font-size: 0.88rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 24px 0;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+    .statGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .middleRow {
+        grid-template-columns: 1fr;
+    }
+
+    .bottomMetrics {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .statGrid {
+        grid-template-columns: 1fr;
+    }
+}
