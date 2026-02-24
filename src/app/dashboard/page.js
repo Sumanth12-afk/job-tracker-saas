@@ -18,7 +18,7 @@ import ResumeLibrary from '@/components/ResumeLibrary';
 import FollowUpCenter from '@/components/FollowUpCenter';
 import OnboardingTour from '@/components/OnboardingTour';
 
-import { Search, RefreshCw, Plus, AlertTriangle, Trash2 } from 'lucide-react';
+import { Search, RefreshCw, Plus, AlertTriangle, Trash2, Shield, Eye, Lock, Filter, XCircle, Trash } from 'lucide-react';
 import styles from './dashboard.module.css';
 
 export default function DashboardPage() {
@@ -334,6 +334,65 @@ export default function DashboardPage() {
                                 setIsConnected={setGmailConnected}
                                 userId={user?.id}
                             />
+                        </div>
+
+                        {/* Privacy & Security */}
+                        <div className={styles.privacySection}>
+                            <h3 className={styles.sectionTitle}>
+                                <Shield size={18} /> Privacy & Security
+                            </h3>
+                            <div className={styles.privacyCard}>
+                                <p className={styles.privacyIntro}>
+                                    We take your privacy seriously. Here's exactly how your Gmail data is handled:
+                                </p>
+                                <div className={styles.privacyList}>
+                                    <div className={styles.privacyItem}>
+                                        <div className={styles.privacyIcon} style={{ background: 'rgba(20, 184, 166, 0.15)', color: '#14b8a6' }}>
+                                            <Eye size={16} />
+                                        </div>
+                                        <div className={styles.privacyContent}>
+                                            <strong>Read-Only Access</strong>
+                                            <span>We only read your emails - we can never send, delete, or modify them.</span>
+                                        </div>
+                                    </div>
+                                    <div className={styles.privacyItem}>
+                                        <div className={styles.privacyIcon} style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8' }}>
+                                            <Filter size={16} />
+                                        </div>
+                                        <div className={styles.privacyContent}>
+                                            <strong>Smart Filtering</strong>
+                                            <span>We only scan for job-related emails (confirmations, interviews, offers). Personal emails are ignored.</span>
+                                        </div>
+                                    </div>
+                                    <div className={styles.privacyItem}>
+                                        <div className={styles.privacyIcon} style={{ background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24' }}>
+                                            <Lock size={16} />
+                                        </div>
+                                        <div className={styles.privacyContent}>
+                                            <strong>Encrypted & Secure</strong>
+                                            <span>All data is encrypted in transit (TLS) and at rest. Your tokens are securely stored.</span>
+                                        </div>
+                                    </div>
+                                    <div className={styles.privacyItem}>
+                                        <div className={styles.privacyIcon} style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444' }}>
+                                            <XCircle size={16} />
+                                        </div>
+                                        <div className={styles.privacyContent}>
+                                            <strong>No Third-Party Sharing</strong>
+                                            <span>Your data is never sold, shared, or used for advertising. Period.</span>
+                                        </div>
+                                    </div>
+                                    <div className={styles.privacyItem}>
+                                        <div className={styles.privacyIcon} style={{ background: 'rgba(156, 163, 175, 0.15)', color: '#9ca3af' }}>
+                                            <Trash size={16} />
+                                        </div>
+                                        <div className={styles.privacyContent}>
+                                            <strong>Disconnect Anytime</strong>
+                                            <span>Revoke access with one click. We'll delete all stored tokens immediately.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <ResumeLibrary userId={user?.id} mode="manage" />

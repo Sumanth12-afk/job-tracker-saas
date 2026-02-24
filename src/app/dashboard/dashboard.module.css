@@ -185,6 +185,77 @@
     font-size: var(--text-sm);
 }
 
+/* ---- Privacy & Security Section ---- */
+.privacySection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.privacyCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+}
+
+.privacyIntro {
+    margin: 0 0 16px 0;
+    color: var(--muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+}
+
+.privacyList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.privacyItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.privacyIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.privacyContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.privacyContent strong {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text);
+}
+
+.privacyContent span {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
 /* ========== TOAST NOTIFICATIONS ========== */
 .toast {
     position: fixed;
