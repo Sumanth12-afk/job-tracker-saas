@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { differenceInDays, subDays, subMonths } from 'date-fns';
+import { differenceInDays, subDays } from 'date-fns';
 import styles from './Analytics.module.css';
 import {
     TrendingUp,
@@ -22,11 +22,21 @@ export default function Analytics({ jobs }) {
     const now = new Date();
 
     const stats = useMemo(() => {
-        const total = jobs.length;
-        const applied = jobs.filter(j => j.status === 'Applied').length;
-        const interviews = jobs.filter(j => j.status === 'Interview').length;
-        const offers = jobs.filter(j => j.status === 'Offer').length;
-        const rejected = jobs.filter(j => j.status === 'Rejected').length;
+        // Filter jobs by selected date range
+        let filteredJobs;
+        const rangeDays = dateRange === 'all' ? null : parseInt(dateRange, 10);
+        if (rangeDays) {
+            const cutoff = subDays(now, rangeDays);
+            filteredJobs = jobs.filter(j => j.date_applied && new Date(j.date_applied) >= cutoff);
+        } else {
+            filteredJobs = jobs;
+        }
+
+        const total = filteredJobs.length;
+        const applied = filteredJobs.filter(j => j.status === 'Applied').length;
+        const interviews = filteredJobs.filter(j => j.status === 'Interview').length;
+        const offers = filteredJobs.filter(j => j.status === 'Offer').length;
+        const rejected = filteredJobs.filter(j => j.status === 'Rejected').length;
         const responded = interviews + offers + rejected;
 
         // Rates
@@ -35,7 +45,7 @@ export default function Analytics({ jobs }) {
         const offerRate = total > 0 ? Math.round((offers / total) * 100) : 0;
 
         // Avg response time
-        const responseTimes = jobs
+        const responseTimes = filteredJobs
             .filter(j => j.status !== 'Applied' && j.date_applied && j.updated_at)
             .map(j => {
                 const d1 = new Date(j.date_applied);
@@ -47,27 +57,40 @@ export default function Analytics({ jobs }) {
             ? (responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length).toFixed(1)
             : 0;
 
-        // Last month stats for deltas
-        const monthAgo = subMonths(now, 1);
-        const lastMonthJobs = jobs.filter(j => new Date(j.date_applied) < monthAgo);
-        const lmTotal = lastMonthJobs.length;
-        const lmResponded = lastMonthJobs.filter(j => ['Interview', 'Offer', 'Rejected'].includes(j.status)).length;
-        const lmResponseRate = lmTotal > 0 ? Math.round((lmResponded / lmTotal) * 100) : 0;
-        const lmInterviews = lastMonthJobs.filter(j => j.status === 'Interview').length;
-        const lmInterviewRate = lmTotal > 0 ? Math.round((lmInterviews / lmTotal) * 100) : 0;
+        // Previous period stats for deltas (compare same-length window before)
+        let prevJobs;
+        if (rangeDays) {
+            const prevStart = subDays(now, rangeDays * 2);
+            const prevEnd = subDays(now, rangeDays);
+            prevJobs = jobs.filter(j => {
+                if (!j.date_applied) return false;
+                const d = new Date(j.date_applied);
+                return d >= prevStart && d < prevEnd;
+            });
+        } else {
+            // "All time" - compare first half vs second half
+            const sorted = [...jobs].filter(j => j.date_applied).sort((a, b) => new Date(a.date_applied) - new Date(b.date_applied));
+            const mid = Math.floor(sorted.length / 2);
+            prevJobs = sorted.slice(0, mid);
+        }
+        const prevTotal = prevJobs.length;
+        const prevResponded = prevJobs.filter(j => ['Interview', 'Offer', 'Rejected'].includes(j.status)).length;
+        const prevResponseRate = prevTotal > 0 ? Math.round((prevResponded / prevTotal) * 100) : 0;
+        const prevInterviews = prevJobs.filter(j => j.status === 'Interview').length;
+        const prevInterviewRate = prevTotal > 0 ? Math.round((prevInterviews / prevTotal) * 100) : 0;
 
-        const responseRateDelta = responseRate - lmResponseRate;
-        const interviewRateDelta = interviewRate - lmInterviewRate;
+        const responseRateDelta = responseRate - prevResponseRate;
+        const interviewRateDelta = interviewRate - prevInterviewRate;
 
-        // Last month avg response time
-        const lmResponseTimes = lastMonthJobs
+        // Previous period avg response time
+        const prevResponseTimes = prevJobs
             .filter(j => j.status !== 'Applied' && j.date_applied && j.updated_at)
             .map(j => Math.max(0, Math.floor((new Date(j.updated_at) - new Date(j.date_applied)) / (1000 * 60 * 60 * 24))))
             .filter(d => d > 0 && d < 90);
-        const lmAvgResponse = lmResponseTimes.length > 0
-            ? (lmResponseTimes.reduce((a, b) => a + b, 0) / lmResponseTimes.length).toFixed(1)
+        const prevAvgResponse = prevResponseTimes.length > 0
+            ? (prevResponseTimes.reduce((a, b) => a + b, 0) / prevResponseTimes.length).toFixed(1)
             : 0;
-        const responseTimeDelta = lmAvgResponse > 0 ? (parseFloat(avgResponseDays) - parseFloat(lmAvgResponse)).toFixed(1) : 0;
+        const responseTimeDelta = prevAvgResponse > 0 ? (parseFloat(avgResponseDays) - parseFloat(prevAvgResponse)).toFixed(1) : 0;
 
         // Job Search Score (gamification)
         let score = 50; // base
@@ -78,7 +101,7 @@ export default function Analytics({ jobs }) {
         if (offers >= 1) score += 10;
         // Weekly activity bonus
         const weekAgo = subDays(now, 7);
-        const thisWeekApps = jobs.filter(j => new Date(j.date_applied) >= weekAgo).length;
+        const thisWeekApps = filteredJobs.filter(j => new Date(j.date_applied) >= weekAgo).length;
         if (thisWeekApps >= 3) score += 5;
         if (thisWeekApps >= 7) score += 5;
         score = Math.min(score, 100);
@@ -88,7 +111,7 @@ export default function Analytics({ jobs }) {
         for (let i = 5; i >= 0; i--) {
             const weekStart = subDays(now, (i + 1) * 7);
             const weekEnd = subDays(now, i * 7);
-            const weekJobs = jobs.filter(j => {
+            const weekJobs = filteredJobs.filter(j => {
                 const d = new Date(j.date_applied);
                 return d >= weekStart && d < weekEnd;
             });
@@ -103,7 +126,7 @@ export default function Analytics({ jobs }) {
 
         // Application sources
         const sourceCounts = {};
-        jobs.forEach(j => {
+        filteredJobs.forEach(j => {
             const source = j.source || 'Direct';
             const normalized = source.charAt(0).toUpperCase() + source.slice(1).toLowerCase();
             sourceCounts[normalized] = (sourceCounts[normalized] || 0) + 1;
@@ -117,7 +140,7 @@ export default function Analytics({ jobs }) {
 
         // Per-company response times
         const companyResponseMap = {};
-        jobs.filter(j => j.status !== 'Applied' && j.date_applied && j.updated_at)
+        filteredJobs.filter(j => j.status !== 'Applied' && j.date_applied && j.updated_at)
             .forEach(j => {
                 const company = j.company_name || 'Unknown';
                 const days = Math.max(0, differenceInDays(new Date(j.updated_at), new Date(j.date_applied)));
@@ -139,7 +162,7 @@ export default function Analytics({ jobs }) {
         let bestSourceInsight = null;
         if (sourceEntries.length > 1) {
             const sourceResponseRates = sourceEntries.map(([source]) => {
-                const sJobs = jobs.filter(j => (j.source || 'Direct') === source.toLowerCase() || (j.source || 'Direct') === source);
+                const sJobs = filteredJobs.filter(j => (j.source || 'Direct') === source.toLowerCase() || (j.source || 'Direct') === source);
                 const sResponded = sJobs.filter(j => ['Interview', 'Offer', 'Rejected'].includes(j.status)).length;
                 return { source, rate: sJobs.length > 0 ? Math.round((sResponded / sJobs.length) * 100) : 0 };
             }).sort((a, b) => b.rate - a.rate);
@@ -151,7 +174,7 @@ export default function Analytics({ jobs }) {
         // Best day to apply
         const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const dayStats = [0, 0, 0, 0, 0, 0, 0];
-        jobs.filter(j => ['Interview', 'Offer'].includes(j.status)).forEach(j => {
+        filteredJobs.filter(j => ['Interview', 'Offer'].includes(j.status)).forEach(j => {
             if (j.date_applied) {
                 dayStats[new Date(j.date_applied).getDay()]++;
             }
@@ -162,8 +185,8 @@ export default function Analytics({ jobs }) {
         // Momentum
         const twoWeeksAgo = subDays(now, 14);
         const weekAgoDate = subDays(now, 7);
-        const thisWeek = jobs.filter(j => new Date(j.date_applied) >= weekAgoDate).length;
-        const lastWeek = jobs.filter(j => {
+        const thisWeek = filteredJobs.filter(j => new Date(j.date_applied) >= weekAgoDate).length;
+        const lastWeek = filteredJobs.filter(j => {
             const d = new Date(j.date_applied);
             return d >= twoWeeksAgo && d < weekAgoDate;
         }).length;
