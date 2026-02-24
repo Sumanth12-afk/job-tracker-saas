@@ -87,6 +87,10 @@ export default function Home() {
             <span className={styles.logoText}>JobTracker</span>
           </Link>
           <div className={styles.navRight}>
+            <a href="#demo" className={styles.navLink} onClick={(e) => {
+              e.preventDefault();
+              document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' });
+            }}>See Demo</a>
             <Link href="/login" className={styles.navLink}>Log in</Link>
           </div>
         </nav>
@@ -122,7 +126,7 @@ export default function Home() {
         </div>
 
         {/* Demo Preview Section */}
-        <div className={styles.demoSection}>
+        <div id="demo" className={styles.demoSection}>
           <div className={styles.demoLabel}>
             <Eye size={16} strokeWidth={2} />
             <span>See it in action</span>

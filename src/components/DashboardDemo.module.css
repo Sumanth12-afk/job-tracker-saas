@@ -1,4 +1,5 @@
-/* ========== DASHBOARD DEMO (Landing Page Preview) ========== */
+/* ========== DASHBOARD DEMO (Interactive Landing Page Preview) ========== */
+
 .demoWrapper {
     position: relative;
     max-width: 960px;
@@ -16,13 +17,13 @@
     transform: rotateX(2deg);
     transition: transform 0.4s ease;
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    height: 520px;
 }
 
 .demoFrame:hover {
     transform: rotateX(0deg);
 }
 
-/* Glow behind frame */
 .glowEffect {
     position: absolute;
     inset: -40px;
@@ -69,16 +70,26 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 10px;
+    padding: 7px 10px;
     border-radius: 6px;
     font-size: 0.65rem;
     color: #6b7280;
-    cursor: default;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    width: 100%;
+    transition: all 0.15s ease;
+}
+
+.sidebarItem:hover {
+    color: #d1d5db;
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .sidebarActive {
-    color: #14b8a6;
-    background: rgba(20, 184, 166, 0.1);
+    color: #14b8a6 !important;
+    background: rgba(20, 184, 166, 0.1) !important;
     font-weight: 600;
 }
 
@@ -95,7 +106,6 @@
     min-width: 0;
 }
 
-/* Top Bar */
 .topBar {
     display: flex;
     align-items: center;
@@ -103,6 +113,7 @@
     padding: 8px 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     background: #111827;
+    flex-shrink: 0;
 }
 
 .searchBox {
@@ -155,16 +166,33 @@
     font-weight: 600;
 }
 
-/* Content */
+/* ---- CONTENT ---- */
 .content {
     padding: 12px 16px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    overflow: hidden;
 }
 
-/* Stat Cards */
+/* Scrollbar */
+.content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 99px;
+}
+
+/* ================ DASHBOARD VIEW ================ */
+
 .statGrid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -214,27 +242,26 @@
 .statInfo {
     display: flex;
     flex-direction: column;
-    gap: 0;
 }
 
 .statLabel {
-    font-size: 0.55rem;
+    font-size: 0.52rem;
     color: #6b7280;
 }
 
 .statNumber {
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #e5e7eb;
     line-height: 1.2;
 }
 
 .statDelta {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
     color: #14b8a6;
 }
 
-/* Middle Row */
+/* Middle row */
 .middleRow {
     display: grid;
     grid-template-columns: 1fr 200px;
@@ -263,7 +290,7 @@
 }
 
 .panelSub {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
     color: #6b7280;
     margin: 2px 0 0;
 }
@@ -272,7 +299,7 @@
     display: flex;
     align-items: center;
     gap: 3px;
-    font-size: 0.5rem;
+    font-size: 0.48rem;
     color: #6b7280;
 }
 
@@ -285,7 +312,7 @@
 .actionItem {
     display: flex;
     gap: 8px;
-    padding: 6px 0;
+    padding: 5px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -294,8 +321,8 @@
 }
 
 .actionDot {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -321,7 +348,7 @@
 }
 
 .badge {
-    font-size: 0.45rem;
+    font-size: 0.42rem;
     font-weight: 600;
     padding: 1px 6px;
     border-radius: 99px;
@@ -343,18 +370,18 @@
 }
 
 .actionTime {
-    font-size: 0.45rem;
+    font-size: 0.42rem;
     color: #4b5563;
 }
 
 .actionCompany {
-    font-size: 0.58rem;
+    font-size: 0.55rem;
     font-weight: 600;
     color: #e5e7eb;
 }
 
 .actionRole {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
     color: #14b8a6;
 }
 
@@ -362,15 +389,14 @@
 .activityList {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 .activityItem {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 5px 0;
+    gap: 6px;
+    padding: 4px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -379,8 +405,8 @@
 }
 
 .activityIcon {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -396,25 +422,25 @@
 }
 
 .activityCompany {
-    font-size: 0.55rem;
+    font-size: 0.52rem;
     font-weight: 600;
     color: #e5e7eb;
     display: block;
 }
 
 .activityRole {
-    font-size: 0.48rem;
+    font-size: 0.45rem;
     color: #14b8a6;
     display: block;
 }
 
 .activityTime {
-    font-size: 0.45rem;
+    font-size: 0.42rem;
     color: #4b5563;
     white-space: nowrap;
 }
 
-/* Bottom Metrics */
+/* Bottom metrics */
 .bottomMetrics {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -432,30 +458,617 @@
 }
 
 .metricLabel {
-    font-size: 0.5rem;
+    font-size: 0.48rem;
     color: #6b7280;
 }
 
 .metricValue {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     font-weight: 700;
     color: #e5e7eb;
 }
 
 .metricDelta {
-    font-size: 0.45rem;
+    font-size: 0.42rem;
     color: #14b8a6;
 }
 
 .metricNote {
+    font-size: 0.42rem;
+    color: #6b7280;
+}
+
+/* ================ KANBAN VIEW ================ */
+.kanban {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    flex: 1;
+    min-height: 0;
+}
+
+.kanbanCol {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.kanbanColHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+}
+
+.kanbanColDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.kanbanColTitle {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.kanbanColCount {
+    font-size: 0.5rem;
+    color: #6b7280;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 5px;
+    border-radius: 99px;
+    margin-left: auto;
+}
+
+.kanbanCards {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.kanbanCard {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    transition: border-color 0.15s;
+    cursor: default;
+}
+
+.kanbanCard:hover {
+    border-color: rgba(20, 184, 166, 0.3);
+}
+
+.kanbanCardTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kanbanLogo {
+    font-size: 0.7rem;
+}
+
+.kanbanDate {
+    font-size: 0.42rem;
+    color: #6b7280;
+}
+
+.kanbanCompany {
+    font-size: 0.58rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.kanbanRole {
+    font-size: 0.48rem;
+    color: #14b8a6;
+}
+
+.kanbanMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 2px;
+}
+
+.kanbanMeta span {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.4rem;
+    color: #6b7280;
+}
+
+/* ================ FOLLOW-UPS VIEW ================ */
+.followups {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.followupsHeader {
+    margin-bottom: 2px;
+}
+
+.followupsTabs {
+    display: flex;
+    gap: 4px;
+}
+
+.fTab {
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    color: #6b7280;
+    font-size: 0.5rem;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.fTab:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #d1d5db;
+}
+
+.fTabActive {
+    background: rgba(20, 184, 166, 0.1) !important;
+    border-color: rgba(20, 184, 166, 0.3) !important;
+    color: #14b8a6 !important;
+    font-weight: 600;
+}
+
+.followupsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.followupItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.followupItem:last-child {
+    border-bottom: none;
+}
+
+.followupLogo {
+    font-size: 1rem;
+}
+
+.followupInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.followupCompany {
+    font-size: 0.58rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.followupRole {
+    font-size: 0.5rem;
+    color: #14b8a6;
+}
+
+.followupNote {
     font-size: 0.45rem;
     color: #6b7280;
+}
+
+.followupRight {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.priorityBadge {
+    font-size: 0.4rem;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 99px;
+    text-transform: capitalize;
+}
+
+.priority_high {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+}
+
+.priority_medium {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+
+.priority_low {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+.followupDays {
+    font-size: 0.42rem;
+    color: #6b7280;
+}
+
+/* ================ ANALYTICS VIEW ================ */
+.analyticsView {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.scoreRow {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+}
+
+.scoreCard {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.scoreRing {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+}
+
+.scoreRing svg {
+    width: 100%;
+    height: 100%;
+}
+
+.scoreNum {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #e5e7eb;
+}
+
+.scoreInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.scoreTitleText {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #e5e7eb;
+}
+
+.scoreDesc {
+    font-size: 0.48rem;
+    color: #6b7280;
+}
+
+.scoreBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: rgba(20, 184, 166, 0.12);
+    color: #14b8a6;
+    font-size: 0.42rem;
+    font-weight: 600;
+    width: fit-content;
+}
+
+.miniStats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.miniStat {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.miniStatLabel {
+    font-size: 0.42rem;
+    color: #6b7280;
+}
+
+.miniStatVal {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #e5e7eb;
+    line-height: 1.2;
+}
+
+.miniStatUp {
+    font-size: 0.42rem;
+    color: #14b8a6;
+}
+
+.miniStatMuted {
+    font-size: 0.42rem;
+    color: #6b7280;
+}
+
+.analyticsTwoCol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.analyticsCard {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.analyticsCardTitle {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #e5e7eb;
+    margin: 0 0 10px;
+}
+
+/* Funnel bars */
+.funnelBars {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.funnelRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.funnelLabel {
+    font-size: 0.48rem;
+    color: #6b7280;
+    width: 50px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.funnelTrack {
+    flex: 1;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.funnelFill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.funnelVal {
+    font-size: 0.52rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    min-width: 16px;
+}
+
+/* Sources */
+.sourcesChart {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.donutMini {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+}
+
+.donutMini svg {
+    width: 100%;
+    height: 100%;
+}
+
+.sourceLegend {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.sourceItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sourceDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.sourceName {
+    font-size: 0.48rem;
+    color: #d1d5db;
+    flex: 1;
+}
+
+.sourcePct {
+    font-size: 0.48rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+/* ================ RESUME VIEW ================ */
+.resumeView {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.resumeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.uploadBtn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(20, 184, 166, 0.12);
+    color: #14b8a6;
+    font-size: 0.5rem;
+    font-weight: 600;
+}
+
+.resumeGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.resumeCard {
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.15s;
+}
+
+.resumeCard:hover {
+    border-color: rgba(20, 184, 166, 0.3);
+}
+
+.resumeCardTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+}
+
+.resumeFileIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(99, 102, 241, 0.12);
+    color: #818cf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resumeActions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #6b7280;
+}
+
+.starFilled {
+    color: #fbbf24;
+}
+
+.resumeName {
+    font-size: 0.58rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.resumeMeta {
+    font-size: 0.42rem;
+    color: #6b7280;
+}
+
+.resumeBottom {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.resumeType {
+    font-size: 0.4rem;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+}
+
+.resumeUses {
+    font-size: 0.42rem;
+    color: #6b7280;
+}
+
+.resumeBtns {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.resumeBtn {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    color: #d1d5db;
+    font-size: 0.42rem;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.resumeBtn:hover {
+    border-color: rgba(20, 184, 166, 0.3);
+    color: #14b8a6;
 }
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
     .demoFrame {
         transform: none;
+        height: 450px;
     }
 
     .sidebar {
@@ -494,6 +1107,26 @@
     .addBtn span {
         display: none;
     }
+
+    .kanban {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .miniStats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .scoreRow {
+        grid-template-columns: 1fr;
+    }
+
+    .analyticsTwoCol {
+        grid-template-columns: 1fr;
+    }
+
+    .resumeGrid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
@@ -503,5 +1136,9 @@
 
     .sidebar {
         display: none;
+    }
+
+    .kanban {
+        grid-template-columns: 1fr;
     }
 }
