@@ -1,248 +1,477 @@
+/* ========== ANALYTICS – REDESIGNED ========== */
 .container {
-    background: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ---- DATE FILTER ---- */
+.dateFilter {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.dateSelect {
+    padding: 8px 14px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.82rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.dateSelect:focus {
+    border-color: var(--primary);
+}
+
+/* ---- SCORE SECTION ---- */
+.scoreSection {
+    display: flex;
+}
+
+.scoreCard {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: var(--space-6);
-    border: 1px solid var(--color-gray-100);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
 }
 
-.header {
-    margin-bottom: var(--space-6);
+.scoreRing {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    flex-shrink: 0;
 }
 
-.title {
-    font-size: var(--text-xl);
-    font-weight: var(--font-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-1) 0;
+.scoreSvg {
+    width: 100%;
+    height: 100%;
 }
 
-.subtitle {
-    font-size: var(--text-sm);
-    color: var(--text-tertiary);
+.scoreProgress {
+    transition: stroke-dasharray 0.8s ease;
+}
+
+.scoreValue {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.scoreNum {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1;
+}
+
+.scoreMax {
+    font-size: 0.85rem;
+    color: var(--muted);
+    align-self: flex-end;
+    margin-bottom: 4px;
+}
+
+.scoreInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.scoreTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
     margin: 0;
 }
 
-/* Sections */
-.section {
-    margin-bottom: var(--space-6);
+.scoreDesc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
 }
 
-.section:last-child {
-    margin-bottom: 0;
+.scoreBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    background: rgba(20, 184, 166, 0.12);
+    color: var(--primary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    width: fit-content;
 }
 
-.sectionTitle {
-    font-size: var(--text-sm);
-    font-weight: var(--font-semibold);
-    color: var(--text-secondary);
-    margin: 0 0 var(--space-4) 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+/* ---- STAT CARDS GRID ---- */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
 }
 
-/* Funnel Chart */
+.statCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.statHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.statIconEl {
+    color: var(--muted);
+}
+
+.statLabel {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.statValue {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+}
+
+.statValue small {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.statDelta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.statDelta.positive {
+    color: var(--success);
+}
+
+.statDelta.negative {
+    color: var(--danger);
+}
+
+.statDeltaMuted {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+/* ---- TWO COLUMN LAYOUT ---- */
+.twoCol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* ---- CHART CARD ---- */
+.chartCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+}
+
+.chartTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 20px;
+}
+
+/* ---- FUNNEL ---- */
 .funnel {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: 12px;
 }
 
 .funnelStep {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: 12px;
+}
+
+.funnelLabel {
+    font-size: 0.78rem;
+    color: var(--muted);
+    width: 72px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.funnelTrack {
+    flex: 1;
+    height: 28px;
+    background: var(--bg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
 }
 
 .funnelBar {
-    height: 36px;
+    height: 100%;
     border-radius: var(--radius-md);
+    transition: width 0.6s ease;
+    position: relative;
+}
+
+.funnelCount {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 24px;
+}
+
+.funnelPercents {
     display: flex;
-    align-items: center;
-    padding: 0 var(--space-4);
-    color: white;
-    font-size: var(--text-sm);
-    font-weight: var(--font-medium);
-    transition: width 0.5s ease;
-    min-width: 0;
+    justify-content: space-around;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
 }
 
-.funnelBar span {
-    white-space: nowrap;
-}
-
-.funnelRate {
-    font-size: var(--text-sm);
-    color: var(--text-tertiary);
-    white-space: nowrap;
-}
-
-/* Stats Grid */
-.statsGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
-}
-
-.statCard {
-    background: var(--color-gray-50);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4);
+.funnelPct {
     text-align: center;
-}
-
-.statValue {
-    display: block;
-    font-size: var(--text-2xl);
-    font-weight: var(--font-bold);
-    color: var(--color-primary-600);
-    margin-bottom: var(--space-1);
-}
-
-.statLabel {
-    font-size: var(--text-xs);
-    color: var(--text-tertiary);
-}
-
-/* Insights Grid */
-.insightsGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3);
-}
-
-.insightCard {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    background: var(--color-gray-50);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-gray-100);
-}
-
-.insightIcon {
-    font-size: 1.5rem;
-}
-
-.insightValue {
-    display: block;
-    font-size: var(--text-lg);
-    font-weight: var(--font-bold);
-    color: var(--text-primary);
-}
-
-.insightValue.positive {
-    color: var(--color-success);
-}
-
-.insightValue.negative {
-    color: var(--color-error);
-}
-
-.insightLabel {
-    font-size: var(--text-xs);
-    color: var(--text-tertiary);
-}
-
-/* Bar Chart */
-.barChart {
-    display: flex;
-    gap: var(--space-4);
-    align-items: flex-end;
-    height: 120px;
-    padding-top: var(--space-4);
-}
-
-.barItem {
-    flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 2px;
+}
+
+.funnelPct strong {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.funnelPct span {
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+/* ---- LINE CHART ---- */
+.lineChart {
+    width: 100%;
+    overflow: hidden;
+}
+
+.lineSvg {
+    width: 100%;
+    height: auto;
+}
+
+/* ---- DONUT CHART ---- */
+.donutRow {
+    display: flex;
     align-items: center;
+    gap: 24px;
+}
+
+.donutWrap {
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+}
+
+.donutSvg {
+    width: 100%;
     height: 100%;
 }
 
-.barWrapper {
-    flex: 1;
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-}
-
-.bar {
-    width: 100%;
-    max-width: 48px;
-    background: linear-gradient(180deg, var(--color-primary-400) 0%, var(--color-primary-600) 100%);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: var(--space-1);
-    transition: height 0.5s ease;
-}
-
-.bar span {
-    font-size: var(--text-xs);
-    font-weight: var(--font-bold);
-    color: white;
-}
-
-.barLabel {
-    font-size: var(--text-xs);
-    color: var(--text-tertiary);
-    margin-top: var(--space-2);
-    white-space: nowrap;
-}
-
-/* Company List */
-.companyList {
+.donutLegend {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: 8px;
+    flex: 1;
 }
 
-.companyItem {
+.legendItem {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-3);
-    background: var(--color-gray-50);
-    border-radius: var(--radius-md);
+    gap: 10px;
 }
 
-.companyRank {
-    font-size: var(--text-sm);
-    font-weight: var(--font-bold);
-    color: var(--color-primary-500);
-    width: 28px;
+.legendDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
 }
 
-.companyName {
+.legendName {
+    font-size: 0.85rem;
+    color: var(--text);
     flex: 1;
-    font-size: var(--text-sm);
-    color: var(--text-primary);
-    font-weight: var(--font-medium);
+}
+
+.legendPct {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* ---- INSIGHT BOX ---- */
+.insightBox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: var(--radius-lg);
+    background: rgba(20, 184, 166, 0.08);
+    border: 1px solid rgba(20, 184, 166, 0.15);
+    color: var(--primary);
+    font-size: 0.82rem;
+}
+
+.insightBox strong {
+    font-weight: 700;
+}
+
+/* ---- COMPANY BAR CHART ---- */
+.companyBars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.companyBarRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.companyBarLabel {
+    font-size: 0.78rem;
+    color: var(--muted);
+    width: 80px;
+    text-align: right;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
-.companyCount {
-    font-size: var(--text-xs);
-    color: var(--text-tertiary);
-    background: var(--bg-primary);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-full);
+.companyBarTrack {
+    flex: 1;
+    height: 20px;
+    background: var(--bg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
 }
 
-/* Responsive */
+.companyBarFill {
+    height: 100%;
+    border-radius: var(--radius-md);
+    transition: width 0.5s ease;
+}
+
+.companyBarVal {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 28px;
+}
+
+/* ---- KEY INSIGHTS ---- */
+.insightsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.insightItem {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+    color: var(--text);
+}
+
+.insightItem:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.insightItem:first-child {
+    padding-top: 0;
+}
+
+.insightUp {
+    color: var(--success);
+    flex-shrink: 0;
+}
+
+.insightDown {
+    color: var(--danger);
+    flex-shrink: 0;
+}
+
+.insightNeutral {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.emptyText {
+    font-size: 0.88rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 24px 0;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .twoCol {
+        grid-template-columns: 1fr;
+    }
+
+    .scoreCard {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+}
+
 @media (max-width: 640px) {
     .statsGrid {
         grid-template-columns: 1fr;
     }
 
-    .barChart {
-        height: 100px;
+    .donutRow {
+        flex-direction: column;
+    }
+
+    .funnelPercents {
+        flex-wrap: wrap;
+        gap: 12px;
     }
 }
