@@ -30,7 +30,7 @@ export default function DemoPage() {
                     See how <span className={styles.accent}>JobTracker</span> works
                 </h1>
                 <p className={styles.subtitle}>
-                    Click through the sidebar to explore every feature — Dashboard, Kanban board, Follow-ups, Analytics, and Resume Library.
+                    Click through the sidebar to explore every feature - Dashboard, Kanban board, Follow-ups, Analytics, and Resume Library.
                 </p>
             </header>
 
@@ -43,7 +43,7 @@ export default function DemoPage() {
             <div className={styles.bottomCta}>
                 <p className={styles.ctaText}>Ready to organize your job search?</p>
                 <Link href="/signup" className={styles.ctaBtnLarge}>
-                    Get Started — It&apos;s Free
+                    Get Started - It&apos;s Free
                 </Link>
             </div>
         </div>

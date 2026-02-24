@@ -534,7 +534,7 @@ function SettingsView() {
                     </div>
 
                     <div className={styles.lastScanInfo}>
-                        <span>Last scan: 2 hours ago — 3 new applications found</span>
+                        <span>Last scan: 2 hours ago - 3 new applications found</span>
                     </div>
                 </div>
             </div>
@@ -555,7 +555,7 @@ function SettingsView() {
                             </div>
                             <div className={styles.privacyContent}>
                                 <span className={styles.privacyTitle}>Read-Only Access</span>
-                                <span className={styles.privacyDesc}>We only read your emails — we can never send, delete, or modify them.</span>
+                                <span className={styles.privacyDesc}>We only read your emails - we can never send, delete, or modify them.</span>
                             </div>
                         </div>
                         <div className={styles.privacyItem}>

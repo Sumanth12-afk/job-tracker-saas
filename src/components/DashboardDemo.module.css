@@ -4,7 +4,6 @@
     position: relative;
     max-width: 960px;
     margin: 0 auto;
-    perspective: 1200px;
 }
 
 .demoFrame {
@@ -14,14 +13,12 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: #0B1220;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
-    transform: rotateX(2deg);
-    transition: transform 0.4s ease;
     font-family: 'Inter', -apple-system, system-ui, sans-serif;
     height: 520px;
 }
 
 .demoFrame:hover {
-    transform: rotateX(0deg);
+    border-color: rgba(20, 184, 166, 0.15);
 }
 
 .glowEffect {
