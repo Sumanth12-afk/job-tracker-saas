@@ -6,8 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import styles from './splash.module.css';
-import { ClipboardList, ArrowRight, CheckCircle2, Sparkles, Eye } from 'lucide-react';
-import DashboardDemo from '@/components/DashboardDemo';
+import { ClipboardList, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 
 // Dynamically import ColorBends to avoid SSR issues with Three.js
 const ColorBends = dynamic(() => import('@/components/ColorBends'), { ssr: false });
@@ -56,9 +55,6 @@ export default function Home() {
 
   if (user) return null;
 
-  // Mouse parallax
-
-
   return (
     <div className={styles.splashContainer}>
       {/* Animated background */}
@@ -87,10 +83,7 @@ export default function Home() {
             <span className={styles.logoText}>JobTracker</span>
           </Link>
           <div className={styles.navRight}>
-            <a href="#demo" className={styles.navLink} onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' });
-            }}>See Demo</a>
+            <Link href="/demo" className={styles.navLink}>See Demo</Link>
             <Link href="/login" className={styles.navLink}>Log in</Link>
           </div>
         </nav>
@@ -123,21 +116,6 @@ export default function Home() {
             <span className={styles.trustIcon}><CheckCircle2 size={14} strokeWidth={2} /></span>
             Free forever. No credit card needed.
           </span>
-        </div>
-
-        {/* Demo Preview Section */}
-        <div id="demo" className={styles.demoSection}>
-          <div className={styles.demoLabel}>
-            <Eye size={16} strokeWidth={2} />
-            <span>See it in action</span>
-          </div>
-          <h2 className={styles.demoHeadline}>
-            Your job search, <span className={styles.gradientText}>organized.</span>
-          </h2>
-          <p className={styles.demoSubtitle}>
-            Track applications, manage follow-ups, and monitor your progress — all in one dashboard.
-          </p>
-          <DashboardDemo />
         </div>
       </div>
     </div>
