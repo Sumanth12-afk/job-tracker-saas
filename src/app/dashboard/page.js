@@ -18,6 +18,10 @@ import ResumeLibrary from '@/components/ResumeLibrary';
 import FollowUpCenter from '@/components/FollowUpCenter';
 import OnboardingTour from '@/components/OnboardingTour';
 import SettingsPublicProfile from '@/components/SettingsPublicProfile';
+import SettingsProfile from '@/components/SettingsProfile';
+import SettingsTargetRole from '@/components/SettingsTargetRole';
+import SettingsGoals from '@/components/SettingsGoals';
+import SettingsExport from '@/components/SettingsExport';
 
 import { Search, RefreshCw, Plus, AlertTriangle, Trash2, Shield, Eye, Lock, Filter, XCircle, Trash } from 'lucide-react';
 import styles from './dashboard.module.css';
@@ -328,6 +332,9 @@ export default function DashboardPage() {
             case 'settings':
                 return (
                     <div className={styles.settingsContent}>
+                        {/* Profile */}
+                        <SettingsProfile />
+
                         <div data-tour="gmail-connect">
                             <GmailConnect
                                 onJobsFound={handleAddJobsFromGmail}
@@ -395,6 +402,15 @@ export default function DashboardPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Target Role */}
+                        <SettingsTargetRole />
+
+                        {/* Application Goals */}
+                        <SettingsGoals jobs={jobs} />
+
+                        {/* Export */}
+                        <SettingsExport jobs={jobs} />
 
                         {/* Public Profile */}
                         <SettingsPublicProfile userId={user?.id} />
