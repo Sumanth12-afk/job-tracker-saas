@@ -482,11 +482,42 @@ function ResumesView() {
 }
 
 /* ============================================================
-   VIEW: SETTINGS (Google Connection + Privacy + Logout)
+   VIEW: SETTINGS (All features)
    ============================================================ */
 function SettingsView() {
     return (
         <div className={styles.settingsView}>
+            {/* Profile Section */}
+            <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>
+                    <UserCircle size={14} /> Profile
+                </h4>
+                <div className={styles.googleCard}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+                        <div style={{
+                            width: '56px', height: '56px', borderRadius: '50%',
+                            background: 'linear-gradient(135deg, var(--primary), #6366f1)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            color: 'white', fontWeight: 800, fontSize: '1.2rem'
+                        }}>DU</div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <span style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text)' }}>Demo User</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>demo.user@gmail.com</span>
+                        </div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Display Name</span>
+                            <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', fontSize: '0.82rem', color: 'var(--text)' }}>Demo User</div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Timezone</span>
+                            <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', fontSize: '0.82rem', color: 'var(--text)' }}>America/Chicago (CST)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Google Connection */}
             <div className={styles.settingsSection}>
                 <h4 className={styles.settingsSectionTitle}>
@@ -550,49 +581,205 @@ function SettingsView() {
                     </p>
                     <div className={styles.privacyList}>
                         <div className={styles.privacyItem}>
-                            <div className={styles.privacyIcon}>
-                                <Eye size={12} />
-                            </div>
+                            <div className={styles.privacyIcon}><Eye size={12} /></div>
                             <div className={styles.privacyContent}>
                                 <span className={styles.privacyTitle}>Read-Only Access</span>
                                 <span className={styles.privacyDesc}>We only read your emails - we can never send, delete, or modify them.</span>
                             </div>
                         </div>
                         <div className={styles.privacyItem}>
-                            <div className={styles.privacyIcon}>
-                                <Search size={12} />
-                            </div>
+                            <div className={styles.privacyIcon}><Search size={12} /></div>
                             <div className={styles.privacyContent}>
                                 <span className={styles.privacyTitle}>Smart Filtering</span>
-                                <span className={styles.privacyDesc}>We only scan for job-related emails (confirmations, interviews, offers). Personal emails are ignored.</span>
+                                <span className={styles.privacyDesc}>We only scan for job-related emails. Personal emails are ignored.</span>
                             </div>
                         </div>
                         <div className={styles.privacyItem}>
-                            <div className={styles.privacyIcon}>
-                                <Lock size={12} />
-                            </div>
+                            <div className={styles.privacyIcon}><Lock size={12} /></div>
                             <div className={styles.privacyContent}>
                                 <span className={styles.privacyTitle}>Encrypted & Secure</span>
-                                <span className={styles.privacyDesc}>All data is encrypted in transit (TLS) and at rest. Your tokens are securely stored.</span>
+                                <span className={styles.privacyDesc}>All data is encrypted in transit (TLS) and at rest.</span>
                             </div>
                         </div>
                         <div className={styles.privacyItem}>
-                            <div className={styles.privacyIcon}>
-                                <XCircle size={12} />
-                            </div>
+                            <div className={styles.privacyIcon}><XCircle size={12} /></div>
                             <div className={styles.privacyContent}>
                                 <span className={styles.privacyTitle}>No Third-Party Sharing</span>
-                                <span className={styles.privacyDesc}>Your data is never sold, shared, or used for advertising. Period.</span>
+                                <span className={styles.privacyDesc}>Your data is never sold, shared, or used for advertising.</span>
                             </div>
                         </div>
-                        <div className={styles.privacyItem}>
-                            <div className={styles.privacyIcon}>
-                                <Trash2 size={12} />
+                    </div>
+                </div>
+            </div>
+
+            {/* Target Role */}
+            <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>
+                    <Briefcase size={14} /> Target Role
+                </h4>
+                <div className={styles.googleCard}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Ideal Role</span>
+                            <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', fontSize: '0.82rem', color: 'var(--text)' }}>Senior Frontend Engineer</div>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Min Salary</span>
+                                <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', fontSize: '0.82rem', color: 'var(--text)' }}>$150,000</div>
                             </div>
-                            <div className={styles.privacyContent}>
-                                <span className={styles.privacyTitle}>Disconnect Anytime</span>
-                                <span className={styles.privacyDesc}>Revoke access with one click. We&apos;ll delete all stored tokens immediately.</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Max Salary</span>
+                                <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', fontSize: '0.82rem', color: 'var(--text)' }}>$250,000</div>
                             </div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Work Type</span>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                                {['Remote', 'Hybrid', 'Onsite'].map((type) => (
+                                    <span key={type} style={{
+                                        padding: '6px 14px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600,
+                                        background: type === 'Remote' ? 'var(--primary)' : 'var(--bg)',
+                                        color: type === 'Remote' ? 'white' : 'var(--muted)',
+                                        border: `1px solid ${type === 'Remote' ? 'var(--primary)' : 'var(--border)'}`,
+                                    }}>{type}</span>
+                                ))}
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Preferred Locations</span>
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                {['San Francisco', 'New York', 'Austin', 'Seattle'].map((loc) => (
+                                    <span key={loc} style={{
+                                        padding: '4px 10px', borderRadius: '9999px', fontSize: '0.72rem', fontWeight: 500,
+                                        background: 'rgba(20,184,166,0.08)', border: '1px solid rgba(20,184,166,0.15)', color: 'var(--primary)',
+                                    }}>{loc}</span>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Application Goals */}
+            <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>
+                    <Trophy size={14} /> Application Goals
+                </h4>
+                <div className={styles.googleCard}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '16px' }}>
+                        {/* Progress Ring */}
+                        <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0 }}>
+                            <svg width="80" height="80" viewBox="0 0 80 80" style={{ transform: 'rotate(-90deg)' }}>
+                                <circle cx="40" cy="40" r="34" fill="none" stroke="var(--border)" strokeWidth="6" />
+                                <circle cx="40" cy="40" r="34" fill="none" stroke="var(--primary)" strokeWidth="6"
+                                    strokeDasharray={`${2 * Math.PI * 34 * 0.7} ${2 * Math.PI * 34 * 0.3}`}
+                                    strokeLinecap="round" />
+                            </svg>
+                            <div style={{
+                                position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+                                alignItems: 'center', justifyContent: 'center',
+                            }}>
+                                <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)' }}>7</span>
+                                <span style={{ fontSize: '0.55rem', color: 'var(--muted)' }}>of 10</span>
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600 }}>This Week</span>
+                                    <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>7 / 10</span>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600 }}>Streak</span>
+                                    <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fbbf24' }}>🔥 5 weeks</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--muted)' }}>
+                            <span>Weekly Target</span>
+                            <span style={{ fontWeight: 700, color: 'var(--primary)' }}>10 apps/week</span>
+                        </div>
+                        <div style={{ height: '6px', background: 'var(--bg)', borderRadius: '3px', overflow: 'hidden' }}>
+                            <div style={{ width: '70%', height: '100%', background: 'var(--primary)', borderRadius: '3px' }} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Export CSV */}
+            <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>
+                    <FileText size={14} /> Export Data
+                </h4>
+                <div className={styles.googleCard}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)' }}>Download as CSV</span>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Export all 10 job applications</span>
+                        </div>
+                        <button style={{
+                            padding: '8px 18px', borderRadius: '8px', background: 'var(--primary)',
+                            color: 'white', border: 'none', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', gap: '6px',
+                        }}>
+                            <FileText size={12} /> Export CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Public Profile */}
+            <div className={styles.settingsSection}>
+                <h4 className={styles.settingsSectionTitle}>
+                    <Globe size={14} /> Public Profile
+                </h4>
+                <div className={styles.googleCard}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'var(--accent-bg)', borderRadius: '10px', marginBottom: '14px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)' }}>
+                                <Eye size={14} /> Profile is Public
+                            </span>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--muted)' }}>Anyone with the link can see your aggregated stats</span>
+                        </div>
+                        <div style={{
+                            width: '42px', height: '24px', borderRadius: '12px',
+                            background: 'var(--primary)', position: 'relative', cursor: 'pointer',
+                        }}>
+                            <div style={{
+                                width: '18px', height: '18px', borderRadius: '50%',
+                                background: 'white', position: 'absolute', top: '3px', right: '3px',
+                            }} />
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', marginBottom: '14px', fontSize: '0.75rem', color: 'var(--primary)', fontFamily: 'monospace' }}>
+                        🔗 yoursite.com/profile/demo-user
+                        <span style={{ marginLeft: 'auto', cursor: 'pointer', color: 'var(--muted)' }}>📋</span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Username</span>
+                            <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', fontSize: '0.82rem', color: 'var(--text)' }}>demo-user</div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Display Name</span>
+                            <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'var(--bg)', border: '1px solid var(--border)', fontSize: '0.82rem', color: 'var(--text)' }}>Demo User</div>
+                        </div>
+                    </div>
+
+                    <div style={{ marginTop: '12px' }}>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>Visible on Profile</span>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                            {['Activity Heatmap', 'Application Pipeline', 'Source Breakdown', 'Streak Badge'].map((item) => (
+                                <label key={item} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', color: 'var(--text)', cursor: 'pointer' }}>
+                                    <span style={{ width: '16px', height: '16px', borderRadius: '4px', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '10px' }}>✓</span>
+                                    {item}
+                                </label>
+                            ))}
                         </div>
                     </div>
                 </div>
