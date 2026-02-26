@@ -118,6 +118,23 @@ export default function Home() {
           </span>
         </div>
       </div>
+
+      {/* Legal Footer */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        padding: '12px',
+        fontSize: '0.72rem',
+        color: 'rgba(255,255,255,0.3)',
+        zIndex: 10,
+      }}>
+        © 2026 JobTracker |{' '}
+        <Link href="/terms" style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>Terms</Link>{' · '}
+        <Link href="/privacy" style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>Privacy</Link>
+      </div>
     </div>
   );
 }
