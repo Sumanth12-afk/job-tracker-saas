@@ -50,9 +50,15 @@
     gap: 4px;
 }
 
-.email {
-    font-size: 0.9rem;
+.displayName {
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--text);
+}
+
+.email {
+    font-size: 0.82rem;
+    color: var(--muted);
     font-weight: 500;
 }
 

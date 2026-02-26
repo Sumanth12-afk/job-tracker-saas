@@ -46,8 +46,8 @@ export default function SettingsProfile({ userEmail }) {
                 <div className={styles.avatarRow}>
                     <div className={styles.avatar}>{initials}</div>
                     <div className={styles.userInfo}>
+                        {displayName && <span className={styles.displayName}>{displayName}</span>}
                         <span className={styles.email}>{userEmail || 'user@email.com'}</span>
-                        <span className={styles.badge}>Free Plan</span>
                     </div>
                 </div>
 

@@ -333,7 +333,7 @@ export default function DashboardPage() {
                 return (
                     <div className={styles.settingsContent}>
                         {/* Profile */}
-                        <SettingsProfile />
+                        <SettingsProfile userEmail={user?.email} />
 
                         <div data-tour="gmail-connect">
                             <GmailConnect
