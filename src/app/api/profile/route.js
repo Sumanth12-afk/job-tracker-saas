@@ -1,32 +1,31 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// Get user ID from Supabase auth cookie (same pattern as gmail routes)
-async function getUserIdFromCookie(cookieStore) {
+// Get user from Authorization header (Bearer token)
+async function getUserFromRequest(request) {
     try {
-        const projectRef = supabaseUrl.match(/https:\/\/(.+)\.supabase\.co/)?.[1];
-        const authCookie = cookieStore.get(`sb-${projectRef}-auth-token`);
+        const authHeader = request.headers.get('authorization');
+        if (!authHeader?.startsWith('Bearer ')) return null;
 
-        if (!authCookie) return null;
-
-        const authData = JSON.parse(authCookie.value);
-        return authData.user?.id || null;
-    } catch (e) {
+        const token = authHeader.split(' ')[1];
+        const supabase = createClient(supabaseUrl, supabaseAnonKey);
+        const { data: { user }, error } = await supabase.auth.getUser(token);
+        if (error || !user) return null;
+        return user;
+    } catch {
         return null;
     }
 }
 
 // GET: Fetch current user's profile
-export async function GET() {
+export async function GET(request) {
     try {
-        const cookieStore = await cookies();
-        const userId = await getUserIdFromCookie(cookieStore);
-
-        if (!userId) {
+        const user = await getUserFromRequest(request);
+        if (!user) {
             return NextResponse.json({ profile: null });
         }
 
@@ -34,7 +33,7 @@ export async function GET() {
         const { data: profile } = await supabase
             .from('user_profiles')
             .select('*')
-            .eq('user_id', userId)
+            .eq('user_id', user.id)
             .single();
 
         return NextResponse.json({ profile: profile || null });
@@ -47,10 +46,8 @@ export async function GET() {
 // POST: Create or update profile
 export async function POST(request) {
     try {
-        const cookieStore = await cookies();
-        const userId = await getUserIdFromCookie(cookieStore);
-
-        if (!userId) {
+        const user = await getUserFromRequest(request);
+        if (!user) {
             return NextResponse.json({ error: 'Not logged in' }, { status: 401 });
         }
 
@@ -71,13 +68,13 @@ export async function POST(request) {
             .eq('username', username)
             .single();
 
-        if (existing && existing.user_id !== userId) {
+        if (existing && existing.user_id !== user.id) {
             return NextResponse.json({ error: 'Username already taken' }, { status: 409 });
         }
 
         // Upsert profile
         const profileData = {
-            user_id: userId,
+            user_id: user.id,
             username,
             display_name: display_name || null,
             bio: bio || null,

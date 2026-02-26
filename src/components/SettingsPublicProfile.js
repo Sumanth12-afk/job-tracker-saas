@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Globe, Link2, Save, Check, Eye, EyeOff, Copy, ExternalLink } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 import styles from './SettingsPublicProfile.module.css';
 
 export default function SettingsPublicProfile({ userId }) {
@@ -23,7 +24,11 @@ export default function SettingsPublicProfile({ userId }) {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await fetch('/api/profile');
+                const { data: { session } } = await supabase.auth.getSession();
+                const token = session?.access_token;
+                const res = await fetch('/api/profile', {
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+                });
                 const data = await res.json();
                 if (data.profile) {
                     setUsername(data.profile.username || '');
@@ -49,9 +54,19 @@ export default function SettingsPublicProfile({ userId }) {
         setError('');
         setSaving(true);
         try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
+            if (!token) {
+                setError('Not logged in');
+                setSaving(false);
+                return;
+            }
             const res = await fetch('/api/profile', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
                 body: JSON.stringify({
                     username,
                     display_name: displayName,
