@@ -236,7 +236,11 @@ export default function PublicProfilePage() {
                 <div className={styles.heroCard}>
                     <div className={styles.heroGlow} />
                     <div className={styles.heroContent}>
-                        <div className={styles.avatar}>{initials}</div>
+                        {profile.avatar_url ? (
+                            <img src={profile.avatar_url} alt={profile.display_name || profile.username} className={styles.avatarImg} />
+                        ) : (
+                            <div className={styles.avatar}>{initials}</div>
+                        )}
                         <div className={styles.heroInfo}>
                             <h1 className={styles.name}>{profile.display_name || profile.username}</h1>
                             {profile.target_role && (

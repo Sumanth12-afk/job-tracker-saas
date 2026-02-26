@@ -24,6 +24,88 @@
     gap: 20px;
 }
 
+/* Avatar upload */
+.avatarRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.avatarWrap {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatarFallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), #6366f1);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.avatarOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-radius: 50%;
+}
+
+.avatarWrap:hover .avatarOverlay {
+    opacity: 1;
+}
+
+.avatarSpinner {
+    position: absolute;
+    inset: 0;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: avatarSpin 0.7s linear infinite;
+}
+
+@keyframes avatarSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.avatarHint {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.82rem;
+    color: var(--text);
+}
+
+.avatarSize {
+    font-size: 0.7rem;
+    color: var(--muted);
+}
+
 /* Toggle row */
 .toggleRow {
     display: flex;

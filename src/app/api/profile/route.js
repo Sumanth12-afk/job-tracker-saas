@@ -52,7 +52,7 @@ export async function POST(request) {
         }
 
         const body = await request.json();
-        const { username, display_name, bio, target_role, is_public, show_heatmap, show_funnel, show_sources, show_streak } = body;
+        const { username, display_name, bio, target_role, avatar_url, is_public, show_heatmap, show_funnel, show_sources, show_streak } = body;
 
         // Validate username
         if (!username || !/^[a-z0-9_-]{3,30}$/.test(username)) {
@@ -79,6 +79,7 @@ export async function POST(request) {
             display_name: display_name || null,
             bio: bio || null,
             target_role: target_role || null,
+            avatar_url: avatar_url || null,
             is_public: is_public ?? false,
             show_heatmap: show_heatmap ?? true,
             show_funnel: show_funnel ?? true,

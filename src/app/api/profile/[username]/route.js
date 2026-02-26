@@ -95,6 +95,7 @@ export async function GET(request, { params }) {
                 display_name: profile.display_name,
                 bio: profile.bio,
                 target_role: profile.target_role,
+                avatar_url: profile.avatar_url,
                 show_heatmap: profile.show_heatmap,
                 show_funnel: profile.show_funnel,
                 show_sources: profile.show_sources,
