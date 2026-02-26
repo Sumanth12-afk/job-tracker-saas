@@ -232,6 +232,20 @@ export default function JobDetailDrawer({ job, onClose, onUpdate, onDelete, user
                                 <div className={styles.detailItem}>
                                     <span className={styles.detailLabel}>Interview Date</span>
                                     <span>{format(new Date(job.interview_date), 'MMMM d, yyyy h:mm a')}</span>
+                                    <a
+                                        href={(() => {
+                                            const d = new Date(job.interview_date);
+                                            const pad = (n) => String(n).padStart(2, '0');
+                                            const fmt = (dt) => `${dt.getFullYear()}${pad(dt.getMonth() + 1)}${pad(dt.getDate())}T${pad(dt.getHours())}${pad(dt.getMinutes())}00`;
+                                            const end = new Date(d.getTime() + 60 * 60 * 1000);
+                                            return `https://calendar.google.com/calendar/event?action=TEMPLATE&text=${encodeURIComponent(`Interview - ${job.company_name}`)}&details=${encodeURIComponent(`Interview for ${job.job_title} at ${job.company_name}`)}&dates=${fmt(d)}/${fmt(end)}`;
+                                        })()}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={styles.calendarLink}
+                                    >
+                                        📅 Add to Google Calendar
+                                    </a>
                                 </div>
                             )}
                             {job.notes && (

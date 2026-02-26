@@ -145,6 +145,23 @@
     font-size: var(--text-sm);
 }
 
+.calendarLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-primary-500);
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    text-decoration: none;
+    margin-top: 4px;
+    transition: color 0.2s;
+}
+
+.calendarLink:hover {
+    color: var(--color-primary-600);
+    text-decoration: underline;
+}
+
 .notes {
     font-size: var(--text-sm);
     color: var(--text-secondary);

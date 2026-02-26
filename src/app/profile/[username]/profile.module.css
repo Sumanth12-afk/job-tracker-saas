@@ -1,0 +1,636 @@
+/* ==========================================
+   PUBLIC PROFILE PAGE - Premium Dark Theme
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.page {
+    min-height: 100vh;
+    background: #06080f;
+    color: #e5e7eb;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Ambient background glow */
+.bgGlow {
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(20, 184, 166, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bgGrid {
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+}
+
+/* ========== LOADING & ERROR ========== */
+.loadingPage,
+.errorPage {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: #06080f;
+    color: #9ca3af;
+    font-family: 'Inter', sans-serif;
+}
+
+.loadingSpinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(20, 184, 166, 0.15);
+    border-top-color: #14b8a6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.errorIcon {
+    font-size: 4rem;
+    margin-bottom: 8px;
+}
+
+.errorPage h1 {
+    font-size: 1.5rem;
+    color: #e5e7eb;
+    margin: 0;
+}
+
+.errorPage p {
+    color: #6b7280;
+    margin: 0;
+}
+
+/* ========== HERO CARD ========== */
+.heroCard {
+    position: relative;
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.06), rgba(99, 102, 241, 0.04));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.heroGlow {
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.15), transparent 70%);
+    pointer-events: none;
+}
+
+.heroContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    position: relative;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #14b8a6, #6366f1);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    box-shadow: 0 0 40px rgba(20, 184, 166, 0.2);
+}
+
+.heroInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.name {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #f9fafb;
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.role {
+    font-size: 0.95rem;
+    color: #14b8a6;
+    font-weight: 500;
+}
+
+.bio {
+    font-size: 0.88rem;
+    color: #9ca3af;
+    line-height: 1.5;
+    margin: 4px 0 0;
+}
+
+.badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.badgeStreak {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.15);
+    font-size: 0.75rem;
+    color: #fbbf24;
+    font-weight: 600;
+}
+
+/* ========== STATS GRID ========== */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.statCard {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 24px 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.statCard:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(20, 184, 166, 0.15);
+    transform: translateY(-2px);
+}
+
+.statNumber {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #f9fafb;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+.statNumberAccent {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #14b8a6;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+.statLabel {
+    font-size: 0.72rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+/* ========== SECTIONS ========== */
+.section {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e5e7eb;
+    margin: 0;
+}
+
+.sectionIcon {
+    font-size: 1.1rem;
+}
+
+.sectionCard {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+/* ========== ACTIVITY HEATMAP ========== */
+.heatmapContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.heatmapMonths {
+    display: grid;
+    grid-template-columns: repeat(52, 1fr);
+    font-size: 0.65rem;
+    color: #6b7280;
+    padding-left: 2px;
+    margin-bottom: 2px;
+}
+
+.heatmapGrid {
+    display: grid;
+    grid-template-columns: repeat(52, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 3px;
+    grid-auto-flow: column;
+}
+
+.heatmapCell {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 3px;
+    min-width: 10px;
+}
+
+.level0 {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.level1 {
+    background: rgba(20, 184, 166, 0.2);
+}
+
+.level2 {
+    background: rgba(20, 184, 166, 0.4);
+}
+
+.level3 {
+    background: rgba(20, 184, 166, 0.65);
+}
+
+.level4 {
+    background: #14b8a6;
+}
+
+.heatmapLegend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-end;
+    font-size: 0.65rem;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.heatmapLegend .heatmapCell {
+    width: 12px;
+    height: 12px;
+    min-width: 12px;
+}
+
+/* ========== FUNNEL ========== */
+.funnel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.funnelStage {
+    display: grid;
+    grid-template-columns: 140px 1fr 50px;
+    align-items: center;
+    gap: 12px;
+}
+
+.funnelLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.funnelIcon {
+    font-size: 1rem;
+}
+
+.funnelText {
+    font-size: 0.82rem;
+    color: #d1d5db;
+    font-weight: 500;
+}
+
+.funnelCount {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #f9fafb;
+}
+
+.funnelBarTrack {
+    height: 28px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.funnelBar {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0.85;
+}
+
+.funnelPct {
+    font-size: 0.78rem;
+    color: #6b7280;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* ========== SOURCES ========== */
+.sourceList {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sourceItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sourceBar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.sourceFill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+}
+
+.sourceLabel {
+    font-size: 0.78rem;
+    color: #d1d5db;
+    min-width: 100px;
+    font-weight: 500;
+}
+
+.sourcePct {
+    font-size: 0.78rem;
+    color: #6b7280;
+    font-weight: 600;
+    min-width: 36px;
+    text-align: right;
+}
+
+/* ========== MONTHLY TREND ========== */
+.trendChart {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 140px;
+    padding-bottom: 28px;
+    position: relative;
+}
+
+.trendBarWrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    position: relative;
+}
+
+.trendBarOuter {
+    flex: 1;
+    width: 100%;
+    max-width: 40px;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+}
+
+.trendBarInner {
+    width: 100%;
+    min-height: 4px;
+    background: linear-gradient(180deg, #14b8a6, rgba(20, 184, 166, 0.3));
+    border-radius: 6px 6px 2px 2px;
+    transition: height 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.trendLabel {
+    font-size: 0.68rem;
+    color: #6b7280;
+    font-weight: 600;
+    position: absolute;
+    bottom: -20px;
+}
+
+.trendCount {
+    font-size: 0.7rem;
+    color: #9ca3af;
+    font-weight: 700;
+    position: absolute;
+    top: -4px;
+}
+
+/* ========== TWO COLUMN ========== */
+.twoCol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* ========== CTA SECTION ========== */
+.ctaSection {
+    position: relative;
+    text-align: center;
+    padding: 48px 32px;
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.06), rgba(99, 102, 241, 0.04));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 24px;
+    margin-top: 40px;
+    overflow: hidden;
+}
+
+.ctaGlow {
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.12), transparent 70%);
+    pointer-events: none;
+}
+
+.ctaTitle {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #f9fafb;
+    margin: 0 0 8px;
+    position: relative;
+}
+
+.ctaSubtitle {
+    font-size: 0.88rem;
+    color: #9ca3af;
+    margin: 0 0 24px;
+    line-height: 1.5;
+    position: relative;
+}
+
+.ctaBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #14b8a6, #0f766e);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 0 30px rgba(20, 184, 166, 0.15);
+}
+
+.ctaBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(20, 184, 166, 0.25);
+}
+
+/* ========== FOOTER ========== */
+.footer {
+    text-align: center;
+    padding: 32px 0 16px;
+    font-size: 0.78rem;
+    color: #4b5563;
+}
+
+.footerLink {
+    color: #14b8a6;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footerLink:hover {
+    text-decoration: underline;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .container {
+        padding: 24px 16px;
+    }
+
+    .heroCard {
+        padding: 24px;
+    }
+
+    .heroContent {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .badges {
+        justify-content: center;
+    }
+
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .statNumber,
+    .statNumberAccent {
+        font-size: 1.6rem;
+    }
+
+    .twoCol {
+        grid-template-columns: 1fr;
+    }
+
+    .funnelStage {
+        grid-template-columns: 120px 1fr 40px;
+    }
+
+    .name {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .heroCard {
+        padding: 20px;
+    }
+
+    .avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .sectionCard {
+        padding: 16px;
+    }
+}

@@ -17,6 +17,7 @@ import Analytics from '@/components/Analytics';
 import ResumeLibrary from '@/components/ResumeLibrary';
 import FollowUpCenter from '@/components/FollowUpCenter';
 import OnboardingTour from '@/components/OnboardingTour';
+import SettingsPublicProfile from '@/components/SettingsPublicProfile';
 
 import { Search, RefreshCw, Plus, AlertTriangle, Trash2, Shield, Eye, Lock, Filter, XCircle, Trash } from 'lucide-react';
 import styles from './dashboard.module.css';
@@ -394,6 +395,9 @@ export default function DashboardPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Public Profile */}
+                        <SettingsPublicProfile userId={user?.id} />
 
                         <ResumeLibrary userId={user?.id} mode="manage" />
 
